@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_home"
+    app:startDestination="@id/homeScreenFragment2">
+
+    <fragment
+        android:id="@+id/homeScreenFragment2"
+        android:name="com.example.android.medicinecabinet.homeScreen.HomeScreenFragment"
+        android:label="HomeScreenFragment" >
+        <action
+            android:id="@+id/action_homeScreenFragment2_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.android.medicinecabinet.detail.DetailFragment"
+        android:label="DetailFragment" >
+        <argument
+            android:name="medicineId"
+            app:argType="integer" />
+    </fragment>
+</navigation>

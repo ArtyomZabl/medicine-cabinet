@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MedicineCabinet" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- ОСНОВНОЕ -->
+        <item name="android:windowBackground">@android:color/white</item>
+
+        <!-- Дополнительно (важно для карточек) -->
+        <item name="colorSurface">@android:color/white</item>
+        <item name="colorSurfaceVariant">@android:color/white</item>
+        <item name="colorSurfaceContainer">@android:color/white</item>
+        <item name="colorSurfaceContainerLow">@android:color/white</item>
+        <item name="colorSurfaceContainerHigh">@android:color/white</item>
+    </style>
+
+    <style name="Theme.MedicineCabinet" parent="Base.Theme.MedicineCabinet" />
+</resources>

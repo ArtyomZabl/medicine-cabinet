@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_meds"
+    app:startDestination="@id/medicinesFragment2">
+
+    <fragment
+        android:id="@+id/howToAddFragment2"
+        android:name="com.example.android.medicinecabinet.addMedicine.howToAdd.HowToAddFragment"
+        android:label="fragment_how_to_add"
+        tools:layout="@layout/fragment_how_to_add">
+        <action
+            android:id="@+id/action_howToAddFragment2_to_addMedicineFragment2"
+            app:destination="@id/nameFragment2" />
+        <action
+            android:id="@+id/action_howToAddFragment2_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/nameFragment2"
+        android:name="com.example.android.medicinecabinet.addMedicine.nameAndDosage.NameFragment"
+        android:label="AddMedicineFragment">
+        <action
+            android:id="@+id/action_nameFragment2_to_dosageFragment"
+            app:destination="@id/dosageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medicinesFragment2"
+        android:name="com.example.android.medicinecabinet.medicines.MedicinesFragment"
+        android:label="MedicinesFragment">
+        <action
+            android:id="@+id/action_medicinesFragment2_to_howToAddFragment2"
+            app:destination="@id/howToAddFragment2" />
+        <action
+            android:id="@+id/action_medicinesFragment2_to_detailFragment22"
+            app:destination="@id/detailFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment2"
+        android:name="com.example.android.medicinecabinet.detail.DetailFragment"
+        android:label="DetailFragment">
+        <argument
+            android:name="medicineId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/dosageFragment"
+        android:name="com.example.android.medicinecabinet.addMedicine.dosage.DosageFragment"
+        android:label="DosageFragment" >
+        <action
+            android:id="@+id/action_dosageFragment_to_addScheduleFragment"
+            app:destination="@id/addScheduleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addScheduleFragment"
+        android:name="com.example.android.medicinecabinet.addMedicine.schedule.AddScheduleFragment"
+        android:label="AddScheduleFragment" >
+        <action
+            android:id="@+id/action_addScheduleFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+        <action
+            android:id="@+id/action_addScheduleFragment_to_changeScheduleFragment"
+            app:destination="@id/changeScheduleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.android.medicinecabinet.addMedicine.result.ResultFragment"
+        android:label="fragment_result"
+        tools:layout="@layout/fragment_add4_result" >
+        <action
+            android:id="@+id/action_resultFragment_to_medicinesFragment2"
+            app:destination="@id/medicinesFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeScheduleFragment"
+        android:name="com.example.android.medicinecabinet.addMedicine.changeSchedule.ChangeScheduleFragment"
+        android:label="fragment_add3_change_schedule"
+        tools:layout="@layout/fragment_add3_change_duration" >
+        <action
+            android:id="@+id/action_changeScheduleFragment_to_addScheduleFragment"
+            app:destination="@id/addScheduleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.example.android.medicinecabinet.addMedicine.cameraFragment.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_nameFragment2"
+            app:destination="@id/nameFragment2" />
+    </fragment>
+</navigation>

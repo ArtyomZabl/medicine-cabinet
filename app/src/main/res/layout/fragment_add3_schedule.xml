@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="addMedicineViewModel"
+            type="com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorSurface"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:title="НАСТРОЙКА РАСПИСАНИЯ"
+                app:titleCentered="true" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context=".addMedicine.schedule.AddScheduleFragment">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:text="Когда планируете принимать это лекарство?"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_title_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/intake_interval"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="8dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp"
+                    android:backgroundTint="@color/cv_background_light"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/text_input_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/auto_complete_intake_interval"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@android:color/holo_green_light"
+                                android:inputType="none"
+                                style="@style/EdTextStyle"
+                                app:selectedValue="@{addMedicineViewModel.selectedIntakeInterval}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/text_input_days_interval"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/auto_complete_days_interval"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@android:color/holo_green_light"
+                                style="@style/EdTextStyle"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_time"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/intake_interval">
+
+                    <LinearLayout
+                        android:id="@+id/layout_week_days"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="7"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        app:layout_constraintTop_toTopOf="@+id/constraint_layout_time"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <TextView
+                            android:id="@+id/day_mon"
+                            style="@style/DayCicrleSelector"
+                            android:text="П"/>
+                        <TextView
+                            android:id="@+id/day_tue"
+                            style="@style/DayCicrleSelector"
+                            android:text="В"/>
+                        <TextView
+                            android:id="@+id/day_wed"
+                            style="@style/DayCicrleSelector"
+                            android:text="С"/>
+                        <TextView
+                            android:id="@+id/day_thu"
+                            style="@style/DayCicrleSelector"
+                            android:text="Ч"/>
+                        <TextView
+                            android:id="@+id/day_fri"
+                            style="@style/DayCicrleSelector"
+                            android:text="П"/>
+                        <TextView
+                            android:id="@+id/day_sat"
+                            style="@style/DayCicrleSelector"
+                            android:text="С"/>
+                        <TextView
+                            android:id="@+id/day_sun"
+                            style="@style/DayCicrleSelector"
+                            android:text="В"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_taking_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:text="Время приёма"
+                        android:textColor="#352E2E"
+                        android:textSize="@dimen/text_title_medium"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/layout_week_days" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rc_view_taking_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="32dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_taking_time" />
+
+                    <Button
+                        android:id="@+id/btn_add_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:onClick="@{() -> addMedicineViewModel.onClickAddTimeDone()}"
+                        android:text="Добавить время"
+                        android:textSize="@dimen/text_btn_medium"
+                        app:layout_constraintEnd_toEndOf="@+id/rc_view_taking_time"
+                        app:layout_constraintStart_toStartOf="@+id/rc_view_taking_time"
+                        app:layout_constraintTop_toBottomOf="@+id/rc_view_taking_time" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="85dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraint_layout_time"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <TextView
+                        android:id="@+id/tv_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Длительность"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_title_medium"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="32dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        android:backgroundTint="@color/cv_background_light"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_duration">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:id="@+id/tv_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ДАТА НАЧАЛА"
+                                android:textSize="@dimen/text_body"
+                                android:maxLines="2"
+                                android:ellipsize="end"
+                                android:textColor="@color/black"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_center"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cv_date_start"
+                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="14dp"
+                                app:cardElevation="0dp"
+                                android:backgroundTint="@color/cv_background_dark"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline_center"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_1">
+                                <TextView
+                                    android:id="@+id/tv_date_start"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="4dp"
+                                    android:text="1 января (сегодня)"
+                                    android:textColor="@color/black"
+                                    android:ellipsize="end"
+                                    android:maxLines="2"
+                                    android:textSize="@dimen/text_body"/>
+                            </androidx.cardview.widget.CardView>
+
+
+                            <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline_center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_percent="0.5"/>
+
+                            <TextView
+                                android:id="@+id/tv_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ДАТА ОКОНЧАНИЯ"
+                                android:textSize="@dimen/text_body"
+                                android:textColor="@color/black"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="@+id/guideline_center"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cv_date_end"
+                                android:layout_marginTop="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="14dp"
+                                app:cardElevation="0dp"
+                                app:cardBackgroundColor="@color/cv_background_light"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="@+id/guideline_center"
+                                app:layout_constraintTop_toBottomOf="@+id/tv_2">
+                                <TextView
+                                    android:id="@+id/tv_date_end"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginVertical="4dp"
+                                    android:layout_marginStart="0dp"
+                                    android:layout_marginEnd="4dp"
+                                    android:text="Нет"
+                                    android:textColor="@color/dark_grey"
+                                    android:textSize="@dimen/text_body"
+                                    android:maxLines="2"
+                                    android:ellipsize="end"/>
+                            </androidx.cardview.widget.CardView>
+
+                            <View
+                                android:id="@+id/divider"
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@android:color/darker_gray"
+                                app:layout_constraintTop_toBottomOf="@+id/cv_date_start"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"/>
+
+                            <TextView
+                                android:id="@+id/btn_change_duration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Изменить"
+                                android:textSize="@dimen/text_body"
+                                android:onClick="@{() -> addMedicineViewModel.onClickChangeSchedule()}"
+                                android:textColor="@color/btn_text_color"
+                                android:backgroundTint="@color/white"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/divider"
+                                app:layout_constraintVertical_bias="0.0" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:onClick="@{() -> addMedicineViewModel.navToResultClicked()}"
+            android:text="Далее"
+            android:textSize="@dimen/text_btn_medium"
+            android:translationZ="10dp" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

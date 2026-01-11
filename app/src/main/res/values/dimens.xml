@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    //Button
+    <dimen name="text_btn_medium">16sp</dimen>
+    <dimen name="text_btn_small">14sp</dimen>
+
+    //Text
+    <dimen name="text_title_large">24sp</dimen>
+    <dimen name="text_title_medium">20sp</dimen>
+    <dimen name="text_title_small">20sp</dimen>
+    <dimen name="text_body">12sp</dimen>
+</resources>

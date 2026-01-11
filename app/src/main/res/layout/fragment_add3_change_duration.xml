@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".addMedicine.changeSchedule.ChangeScheduleFragment">
+
+    <data>
+        <variable
+            name="addMedicineViewModel"
+            type="com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_editor_absoluteX="0dp"
+            app:layout_editor_absoluteY="0dp"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="Изменить длительность"
+            app:titleCentered="true" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_change_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Дата начала"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_body"
+                    app:layout_constraintBottom_toBottomOf="@+id/cv_date_start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cv_date_start" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_date_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/cv_background_light"
+                    android:onClick="@{() -> addMedicineViewModel.onClickDateTakingStartDone()}"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tv_date_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_margin="4dp"
+                        android:text="@{addMedicineViewModel.selectedStartTakingDate}"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_body"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.cardview.widget.CardView>
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/darker_gray"
+                    app:layout_constraintBottom_toTopOf="@+id/cv_date_end"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cv_date_start" />
+
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Дата окончания"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_body"
+                    app:layout_constraintBottom_toBottomOf="@+id/cv_date_end"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cv_date_end" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_date_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> addMedicineViewModel.onClickDateTakingEndDone()}"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginEnd="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_delete">
+
+                    <TextView
+                        android:id="@+id/tv_date_end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_margin="4dp"
+                        android:text="Нет"
+                        android:textColor="@color/btn_text_color"
+                        android:textSize="@dimen/text_body"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageButton
+                    android:id="@+id/btn_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/round_close_button"
+                    android:contentDescription="@string/delete"
+                    android:padding="3dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    android:src="@drawable/ic_close"
+                    android:visibility="gone"
+                    android:onClick="@{() -> addMedicineViewModel.deleteEndTakingDate()}"
+                    app:layout_constraintBottom_toBottomOf="@+id/cv_date_end"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/cv_date_end"
+                    app:tint="@color/black" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/btn_done"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="ГОТОВО"
+            android:textSize="@dimen/text_btn_medium"
+            android:onClick="@{() -> addMedicineViewModel.navBackToScheduleDone()}"
+            app:layout_constraintEnd_toEndOf="@+id/cv_change_duration"
+            app:layout_constraintStart_toStartOf="@+id/cv_change_duration"
+            app:layout_constraintTop_toBottomOf="@+id/cv_change_duration" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
