@@ -20,7 +20,9 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.android.medicinecabinet.MainActivity
@@ -28,6 +30,7 @@ import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel
 import com.example.android.medicinecabinet.data.productInfo.ProductInfo
 import com.example.android.medicinecabinet.databinding.FragmentCameraBinding
+import com.example.android.medicinecabinet.utils.ProductUiState
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
@@ -41,7 +44,7 @@ import org.jsoup.Jsoup
 
 class CameraFragment : Fragment() {
     lateinit var binding: FragmentCameraBinding
-    private val addMedicineViewModel: AddMedicineViewModel by navGraphViewModels(R.id.nav_graph_meds){
+    private val addMedicineViewModel: AddMedicineViewModel by navGraphViewModels(R.id.nav_graph_meds) {
         (requireActivity() as MainActivity).factory
     }
     private lateinit var barcodeScanner: BarcodeScanner
@@ -51,23 +54,44 @@ class CameraFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.d("CameraFragment", "onCreate loaded")
+        addMedicineViewModel.setCode(null)
         binding = FragmentCameraBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("CameraFragment", "onViewCreated loaded")
         val options = BarcodeScannerOptions.Builder()
             .setBarcodeFormats(
                 Barcode.FORMAT_EAN_13,
                 Barcode.FORMAT_EAN_8,
-                Barcode.FORMAT_CODE_128)
+                Barcode.FORMAT_CODE_128
+            )
             .build()
 
         barcodeScanner = BarcodeScanning.getClient(options)
 
         requestCameraPermission()
+
+        viewLifecycleOwnerLiveData.observe(viewLifecycleOwner) { owner ->
+            owner?.let {
+                addMedicineViewModel.uiState.observe(viewLifecycleOwner) { state ->
+                    when (state) {
+                        is ProductUiState.Loading -> showLoader()
+                        is ProductUiState.Success -> {
+                            addMedicineViewModel.uiState.removeObservers(viewLifecycleOwner)
+                            findNavController().navigate(R.id.action_cameraFragment_to_nameFragment2)
+                            addMedicineViewModel.resetUiState()
+                        }
+
+                        is ProductUiState.Error -> showError()
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun startCamera() {
@@ -90,16 +114,12 @@ class CameraFragment : Fragment() {
                 processImage(imageProxy)
             }
 
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle(
                 viewLifecycleOwner,
-                cameraSelector,
+                CameraSelector.DEFAULT_BACK_CAMERA,
                 preview,
                 imageAnalyzer
             )
-
         }, ContextCompat.getMainExecutor(requireContext()))
     }
 
@@ -130,10 +150,8 @@ class CameraFragment : Fragment() {
 
     private fun onBarcodeDetected(code: String) {
         Log.d("BARCODE", "Barcode is $code")
-
+        addMedicineViewModel.loadProduct(code)
         addMedicineViewModel.setCode(code)
-        addMedicineViewModel.getProductInfo(code)
-        findNavController().navigate(R.id.action_cameraFragment_to_nameFragment2)
     }
 
     private val cameraPermissionLauncher =
@@ -157,18 +175,7 @@ class CameraFragment : Fragment() {
         }
     }
 
-    private fun showPermissionRationale() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Доступ к камере")
-            .setMessage("Камера нужна для сканирования штрих-кода лекарства")
-            .setPositiveButton("Разрешить") { _, _ ->
-                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-            .setNegativeButton("Отмена", null)
-            .show()
-    }
-
-    fun showCameraPermissionDenied(){
+    fun showCameraPermissionDenied() {
         val canAskAgain = shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)
 
         if (canAskAgain) {
@@ -200,5 +207,16 @@ class CameraFragment : Fragment() {
             Uri.fromParts("package", requireContext().packageName, null)
         )
         startActivity(intent)
+    }
+
+
+    private fun showLoader() {
+        binding.progressBar.isVisible = true
+        binding.progressBar.show()
+    }
+
+    private fun showError() {
+        binding.progressBar.isVisible = false
+        Snackbar.make(binding.root, "Ошибка распознавания", Snackbar.LENGTH_LONG).show()
     }
 }

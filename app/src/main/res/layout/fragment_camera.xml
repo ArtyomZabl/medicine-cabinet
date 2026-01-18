@@ -11,17 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--<Button
-        android:id="@+id/image_capture_button"
-        android:layout_width="match_parent"
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginBottom="50dp"
-        android:elevation="2dp"
-        android:text="Take Photo"
-        android:textSize="@dimen/text_btn_medium"
+        android:indeterminate="true"
+        app:indicatorSize="56dp"
+        app:indicatorColor="?attr/colorPrimary"
+        app:trackThickness="4dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />-->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

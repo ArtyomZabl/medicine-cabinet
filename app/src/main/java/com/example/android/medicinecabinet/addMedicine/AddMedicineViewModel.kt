@@ -1,8 +1,8 @@
 package com.example.android.medicinecabinet.addMedicine
 
-import android.provider.MediaStore
+
 import android.util.Log
-import android.view.View
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,8 +17,7 @@ import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakin
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeUi
 import com.example.android.medicinecabinet.utils.DateFormatter
-import com.example.android.medicinecabinet.utils.Functions.setMarginTop
-import com.example.android.medicinecabinet.utils.TimeFormatter
+import com.example.android.medicinecabinet.utils.ProductUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +27,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -81,18 +79,34 @@ class AddMedicineViewModel(
             }
         }
 
+    /*var uiState by mutableStateOf<ProductUiState>(ProductUiState.Idle)
+        private set*/
+
+    private var _uiState = MutableLiveData<ProductUiState>(ProductUiState.Idle)
+    val uiState: LiveData<ProductUiState>
+        get() = _uiState
+
+    fun resetUiState() {
+        _uiState.value = ProductUiState.Idle
+    }
+
     private val _product = MutableStateFlow<ProductInfo?>(null)
     val product: StateFlow<ProductInfo?> = _product
 
-    fun getProductInfo(barcode: String) {
+    fun loadProduct(barcode: String) {
         viewModelScope.launch {
-            _product.value = fetchProductInfo(barcode)
+            _uiState.value = ProductUiState.Loading
 
-            if (_product.value != null) {
-                Log.d("PRODUCT", "Название: ${_product.value?.name}")
-                Log.d("PRODUCT", "Цена: ${_product.value?.priceLei}")
-            } else {
-                Log.d("PRODUCT", "Не удалось получить данные")
+            try {
+                _product.value = fetchProductInfo(barcode)
+
+                if (_product.value != null){
+                    _uiState.value = ProductUiState.Success(_product.value!!)
+                } else {
+                    _uiState.value = ProductUiState.Error("Такой товар не найден")
+                }
+            } catch (e: Exception){
+                _uiState.value = ProductUiState.Error("Ошибка загрузки")
             }
         }
     }
