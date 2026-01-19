@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         val daoTime = MedicineDatabase.getDatabase(this).takingTimeDao()
         val daoDays = MedicineDatabase.getDatabase(this).selectedTakingDaysDao()
         repository = MedicineRepository(daoMeds, daoTime, daoDays)
-        factory = AddMedicineViewModelFactory(repository)
+        factory = AddMedicineViewModelFactory(repository = repository, application = application)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment

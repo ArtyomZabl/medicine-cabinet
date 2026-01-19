@@ -12,7 +12,7 @@ import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeDao
 
 @Database(
-    entities = [Medicine::class, TakingTime::class, SelectedTakingDays::class], version = 4, exportSchema = true,
+    entities = [Medicine::class, TakingTime::class, SelectedTakingDays::class], version = 6, exportSchema = true,
 )
 abstract class MedicineDatabase : RoomDatabase() {
     abstract fun medicineDao(): MedicineDao
@@ -30,11 +30,24 @@ abstract class MedicineDatabase : RoomDatabase() {
                         database.execSQL("ALTER TABLE medicines ADD COLUMN code TEXT")
                     }
                 }
+                val MIGRATION_4_5 = object : Migration(4, 5) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("ALTER TABLE medicines ADD COLUMN description TEXT")
+                    }
+                }
+                val MIGRATION_5_6 = object : Migration(5, 6) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("ALTER TABLE medicines ADD COLUMN medicine_image_path TEXT")
+                    }
+                }
                 Room.databaseBuilder(
                     context.applicationContext,
                     MedicineDatabase::class.java,
                     "medicines"
-                ).addMigrations(MIGRATION_3_4).build().also { INSTANCE = it }
+                ).addMigrations(MIGRATION_3_4)
+                    .addMigrations(MIGRATION_4_5)
+                    .addMigrations(MIGRATION_5_6)
+                    .build().also { INSTANCE = it }
             }
         }
     }

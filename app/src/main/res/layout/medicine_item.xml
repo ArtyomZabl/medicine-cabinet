@@ -38,13 +38,14 @@
 
             <ImageView
                 android:id="@+id/medicine_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:visibility="gone"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/paracetamol" />
+                app:layout_constraintDimensionRatio="1:1"/>
 
             <TextView
                 android:id="@+id/text_name"

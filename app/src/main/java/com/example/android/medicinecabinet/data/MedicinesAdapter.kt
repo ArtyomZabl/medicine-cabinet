@@ -8,6 +8,8 @@ import androidx.compose.runtime.internal.illegalDecoyCallException
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.utils.Constance
 import com.example.android.medicinecabinet.databinding.MedicineItemBinding
@@ -17,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class MedicinesAdapter(private val clickListener: MedicineListener) :
@@ -103,6 +106,17 @@ class MedicinesAdapter(private val clickListener: MedicineListener) :
 
             textName.text = medicine.name
             textQuantity.text = medicine.quantity.toString()
+
+            if (medicine.imagePath != null){
+                binding.medicineImage.load(File(medicine.imagePath)) {
+                    crossfade(true)
+                    placeholder(R.drawable.placeholder)
+                }
+                medicineImage.visibility = View.VISIBLE
+            } else {
+                medicineImage.visibility = View.GONE
+            }
+
 
             if (medicine.dosage == null) {
                 textDosage.visibility = View.GONE

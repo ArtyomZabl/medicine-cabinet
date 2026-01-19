@@ -26,6 +26,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
+import coil.load
 import com.example.android.medicinecabinet.MainActivity
 import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel
@@ -48,13 +49,6 @@ class NameFragment : Fragment() {
     ): View? {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_add1_medicine, container, false)
-
-        /*val bottom =
-        binding.button.doOnLayout { button ->
-            val lp = button.layoutParams as ConstraintLayout.LayoutParams
-            Log.d("initialBottomMargin", "bottomMargin - ${lp.bottomMargin}")
-            initialBottomMargin = lp.bottomMargin
-        }*/
         return binding.root
     }
 
@@ -83,6 +77,11 @@ class NameFragment : Fragment() {
                 addMedicineViewModel.product.collect {
                     it?.let { product ->
                         addMedicineViewModel.textName.value = product.name.toString().trim()
+                        Log.d("IMAGE_URL", product.imageUrl ?: "null")
+                        binding.medsImage.load(product.imageUrl) {
+                            crossfade(true)
+                            placeholder(R.drawable.placeholder)
+                        }
                     }
                 }
             }

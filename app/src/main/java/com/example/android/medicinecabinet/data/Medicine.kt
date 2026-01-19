@@ -12,8 +12,8 @@ data class Medicine(
     @ColumnInfo(name = "medicine_name")
     val name: String,
 
-    @ColumnInfo(name = "medicine_image")
-    val image: Int?,
+    @ColumnInfo(name = "medicine_image_path")
+    val imagePath: String?,
 
     @ColumnInfo(name = "medicine_quantity")
     val quantity: Int?,
@@ -40,12 +40,15 @@ data class Medicine(
     val intakeIntervalDays: Int?,
 
     @ColumnInfo(name = "code")
-    val code: String?
+    val code: String?,
+
+    @ColumnInfo(name = "description")
+    val description: String?
 ){
     class MedicineBuilder {
         private var name: String = ""
         private var quantity: Int? = null
-        private var image: Int? = null
+        private var image: String? = null
         private var expirationDate: String? = null
         private var dosage: Float? = null
         private var unit: String? = null
@@ -53,11 +56,12 @@ data class Medicine(
         private var endTakingDate: String? = null
         private var intakeIntervalDays: Int? = null
         private var code: String? = null
+        private var description: String? = null
 
 
         fun name(name: String) = apply { this.name = name }
         fun quantity(quantity: Int?) = apply { this.quantity = quantity }
-        fun image(image: Int?) = apply { this.image = quantity }
+        fun image(image: String?) = apply { this.image = image }
         fun expirationDate(expirationDate: String?) = apply { this.expirationDate = expirationDate }
         fun dosage(dosage: Float?) = apply { this.dosage = dosage }
         fun unit(unit: String?) = apply { this.unit = unit }
@@ -65,18 +69,20 @@ data class Medicine(
         fun endTakingDate(endTakingDate: String?) = apply { this.endTakingDate = endTakingDate }
         fun intakeIntervalDays(intakeIntervalDays: Int?) = apply { this.intakeIntervalDays = intakeIntervalDays }
         fun code(code: String?) = apply { this.code = code }
+        fun description(description: String?) = apply {this.description = description}
 
         fun build() = Medicine(
             name = name,
             quantity = quantity,
-            image = image,
+            imagePath = image,
             expirationDate = expirationDate,
             dosage = dosage,
             unit = unit,
             startTakingDate = startTakingDate,
             endTakingDate = endTakingDate,
             intakeIntervalDays = intakeIntervalDays,
-            code = code
+            code = code,
+            description = description
         )
     }
 }

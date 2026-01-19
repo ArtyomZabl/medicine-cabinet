@@ -61,7 +61,7 @@ class ResultFragment : Fragment() {
 
             "Каждый день" -> {
                 binding.constraintLayoutSchedule.visibility = View.VISIBLE
-                binding.constraintLayoutSchedule.setMarginTop(0)
+                binding.constraintLayoutSchedule.setMarginTop(16)
 
                 binding.layoutWeekDays.setMarginTop(0)
                 binding.layoutWeekDays.visibility = View.GONE
@@ -101,7 +101,8 @@ class ResultFragment : Fragment() {
 
                 isTakingTimes()
 
-                binding.tvIntakeDays.text = addMedicineViewModel.formatInterval(addMedicineViewModel.daysInterval.value)
+                binding.tvIntakeDays.text =
+                    addMedicineViewModel.formatInterval(addMedicineViewModel.daysInterval.value)
 
                 binding.tvDateStart.text = addMedicineViewModel.selectedStartTakingDate.value
                 setupEndTakingDate()
@@ -120,11 +121,11 @@ class ResultFragment : Fragment() {
         binding.tvName.text = addMedicineViewModel.textName.value
         binding.tvQuantity.text = addMedicineViewModel.textQuantity.value.toString()
 
-        if (addMedicineViewModel.textDosage.value == null){
+        if (addMedicineViewModel.textDosage.value == null) {
             binding.tvDosage.visibility = View.GONE
             binding.tvDosage.setMarginTop(0)
             binding.tvUnit.visibility = View.GONE
-        } else  {
+        } else {
             binding.tvDosage.text = addMedicineViewModel.textDosage.value.toString()
             binding.tvUnit.text = addMedicineViewModel.selectedUnit.value
         }
@@ -156,11 +157,13 @@ class ResultFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 addMedicineViewModel.navigateAfterSave.collect {
-                    findNavController().navigate(R.id.action_resultFragment_to_medicinesFragment2,
+                    findNavController().navigate(
+                        R.id.action_resultFragment_to_medicinesFragment2,
                         null,
                         NavOptions.Builder()
                             .setPopUpTo(R.id.nav_graph_meds, true)
-                            .build())
+                            .build()
+                    )
                 }
             }
         }

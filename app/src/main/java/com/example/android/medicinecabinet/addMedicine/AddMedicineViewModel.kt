@@ -1,13 +1,20 @@
 package com.example.android.medicinecabinet.addMedicine
 
 
+import android.app.Application
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.ImageLoader
+import coil.request.ImageRequest
 import com.example.android.medicinecabinet.addMedicine.changeSchedule.ChangeScheduleFragment.DateType
 import com.example.android.medicinecabinet.utils.WeekDay
 import com.example.android.medicinecabinet.data.Medicine
@@ -26,13 +33,18 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class AddMedicineViewModel(
-    private val repository: MedicineRepository
-) : ViewModel() {
+    private val repository: MedicineRepository,
+    application: Application
+) : AndroidViewModel(application) {
+    private val appContext = getApplication<Application>().applicationContext
     // CODE
 
     private var _code = MutableLiveData<String?>()
@@ -65,26 +77,27 @@ class AddMedicineViewModel(
 
             val name = productDoc.selectFirst("h1.switcher-title")?.text()
             val priceLei = productDoc.selectFirst(".price__new-val")?.text()
-            //val priceBan = productDoc.selectFirst("")?.text()
+            val description = productDoc.selectFirst(".description-container")?.text()
+            //val imageUrl = "https://felicia.md${productDoc.selectFirst(".detail-gallery-big__picture")?.text()}"
+            val imageUrl = productDoc
+                .selectFirst("a[href*=/upload/iblock/]")
+                ?.absUrl("href")
 
-            if (name != null && priceLei != null) {
+            if (name != null) {
                 ProductInfo(
                     code = code.value.toString(),
                     name = name,
                     priceLei = priceLei,
-                    priceBan = null
+                    imageUrl = imageUrl,
+                    description = description
                 )
             } else {
                 null
             }
         }
 
-    /*var uiState by mutableStateOf<ProductUiState>(ProductUiState.Idle)
-        private set*/
-
     private var _uiState = MutableLiveData<ProductUiState>(ProductUiState.Idle)
-    val uiState: LiveData<ProductUiState>
-        get() = _uiState
+    val uiState: LiveData<ProductUiState> get() = _uiState
 
     fun resetUiState() {
         _uiState.value = ProductUiState.Idle
@@ -93,6 +106,7 @@ class AddMedicineViewModel(
     private val _product = MutableStateFlow<ProductInfo?>(null)
     val product: StateFlow<ProductInfo?> = _product
 
+
     fun loadProduct(barcode: String) {
         viewModelScope.launch {
             _uiState.value = ProductUiState.Loading
@@ -100,15 +114,35 @@ class AddMedicineViewModel(
             try {
                 _product.value = fetchProductInfo(barcode)
 
-                if (_product.value != null){
+
+                if (_product.value != null) {
                     _uiState.value = ProductUiState.Success(_product.value!!)
                 } else {
                     _uiState.value = ProductUiState.Error("Такой товар не найден")
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 _uiState.value = ProductUiState.Error("Ошибка загрузки")
             }
         }
+    }
+
+    private var _imagePath = MutableLiveData<String?>()
+
+    suspend fun downloadImage(url: String) {
+        val loader = ImageLoader(appContext)
+        val request = ImageRequest.Builder(appContext)
+            .data(url)
+            .allowHardware(false)
+            .build()
+
+        val result = (loader.execute(request).drawable as BitmapDrawable).bitmap
+
+        val file = File(appContext.cacheDir, "med_${System.currentTimeMillis()}.png")
+        FileOutputStream(file).use { out ->
+            result.compress(Bitmap.CompressFormat.PNG, 100, out)
+        }
+
+        _imagePath.value = file.absolutePath
     }
 
     // VIEW MODEL FRAGMENT ADD 1 NAME
@@ -400,7 +434,14 @@ class AddMedicineViewModel(
     val navigateAfterSave = _navigateAfterSave.asSharedFlow()
 
     fun onMedsClicked() {
-        addNewMeds()
+        viewModelScope.launch {
+            if (product.value?.imageUrl != null) {
+                downloadImage(_product.value?.imageUrl!!)
+            }
+            Log.d("ImagePath", "Image product - ${product.value?.imageUrl}")
+            Log.d("ImagePath", "Image LiveData - ${_imagePath.value}")
+            addNewMeds()
+        }
     }
 
     fun addNewMeds() {
@@ -426,7 +467,7 @@ class AddMedicineViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val newMedicine = Medicine.MedicineBuilder()
                 .name(textName.value ?: "NULL")
-                .image(null)
+                .image(_imagePath.value)
                 .quantity(textQuantity.value)
                 .expirationDate(textExpiration.value)
                 .dosage(textDosage.value)
@@ -435,6 +476,7 @@ class AddMedicineViewModel(
                 .endTakingDate(_selectedEndTakingDate.value)
                 .intakeIntervalDays(daysInterval.value)
                 .code(code.value)
+                .description(_product.value?.description)
                 .build()
 
             val medsId = repository.insert(newMedicine)

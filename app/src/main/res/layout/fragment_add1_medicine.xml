@@ -16,16 +16,29 @@
         tools:context=".addMedicine.nameAndDosage.NameFragment">
 
 
+        <ImageView
+            android:id="@+id/meds_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="32dp"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintDimensionRatio="1:1"/>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/meds_image">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_name"
@@ -41,7 +54,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutQuantity"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="32dp"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
