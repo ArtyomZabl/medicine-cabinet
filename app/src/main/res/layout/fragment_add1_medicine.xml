@@ -10,108 +10,127 @@
             type="com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".addMedicine.nameAndDosage.NameFragment">
+        android:layout_height="match_parent">
 
-
-        <ImageView
-            android:id="@+id/meds_image"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="32dp"
-            android:scaleType="centerCrop"
-            tools:srcCompat="@tools:sample/avatars"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintDimensionRatio="1:1"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_marginHorizontal="32dp"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/meds_image">
+            android:layout_height="wrap_content">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_name"
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/EdTextStyle"
-                android:lines="1"
-                android:hint="Name"
-                android:text="@{addMedicineViewModel.product.name}"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="?attr/colorSurface"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:title="ADD MEDICINE"
+                app:titleCentered="true" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutQuantity"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="20dp"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/text_input_layout_name"
-            app:layout_constraintStart_toStartOf="@+id/text_input_layout_name"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_name">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_quantity"
-                style="@style/EdTextStyle"
-                android:hint="Quantity"
-                android:inputType="number"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                tools:context=".addMedicine.nameAndDosage.NameFragment">
 
-        <TextView
-            android:id="@+id/text_expiration"
-            style="@style/EdTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Expiration date"
-            android:inputType="date"
-            android:onClick="@{() -> addMedicineViewModel.onOpenCalendarClicked()}"
-            android:text="@{addMedicineViewModel.selectedDate}"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayoutQuantity"
-            app:layout_constraintStart_toStartOf="@+id/textInputLayoutQuantity"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutQuantity" />
+                <ImageView
+                    android:id="@+id/meds_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorSurface"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="ADD MEDICINE"
-            app:titleCentered="true" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_layout_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="40dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/meds_image">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_name"
+                        style="@style/EdTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Name"
+                        android:inputType="text"
+                        android:lines="1"
+                        android:text="@{addMedicineViewModel.product.name}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayoutQuantity"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="@+id/text_input_layout_name"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_layout_name"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_quantity"
+                        style="@style/EdTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Quantity"
+                        android:inputType="number" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/text_expiration"
+                    style="@style/EdTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Expiration date"
+                    android:inputType="date"
+                    android:onClick="@{() -> addMedicineViewModel.onOpenCalendarClicked()}"
+                    android:text="@{addMedicineViewModel.selectedDate}"
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayoutQuantity"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayoutQuantity"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayoutQuantity" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/button"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:layout_marginBottom="16dp"
             android:layout_marginHorizontal="32dp"
+            android:layout_marginBottom="16dp"
+            android:enabled="false"
             android:onClick="@{() -> addMedicineViewModel.navNextToDosage()}"
             android:text="DONE"
             android:textSize="@dimen/text_btn_medium"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_gravity="bottom"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

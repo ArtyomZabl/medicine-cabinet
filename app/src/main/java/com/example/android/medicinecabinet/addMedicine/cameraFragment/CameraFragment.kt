@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.android.medicinecabinet.MainActivity
@@ -56,6 +57,7 @@ class CameraFragment : Fragment() {
     ): View? {
         Log.d("CameraFragment", "onCreate loaded")
         addMedicineViewModel.setCode(null)
+        addMedicineViewModel.resetUiState()
         binding = FragmentCameraBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -75,21 +77,16 @@ class CameraFragment : Fragment() {
 
         requestCameraPermission()
 
-        viewLifecycleOwnerLiveData.observe(viewLifecycleOwner) { owner ->
-            owner?.let {
-                addMedicineViewModel.uiState.observe(viewLifecycleOwner) { state ->
-                    when (state) {
-                        is ProductUiState.Loading -> showLoader()
-                        is ProductUiState.Success -> {
-                            addMedicineViewModel.uiState.removeObservers(viewLifecycleOwner)
-                            findNavController().navigate(R.id.action_cameraFragment_to_nameFragment2)
-                            addMedicineViewModel.resetUiState()
-                        }
 
-                        is ProductUiState.Error -> showError()
-                        else -> {}
-                    }
+        addMedicineViewModel.uiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is ProductUiState.Loading -> showLoader()
+                is ProductUiState.Success -> {
+                    findNavController().navigate(R.id.action_cameraFragment_to_nameFragment2)
                 }
+
+                is ProductUiState.Error -> showError()
+                else -> Unit
             }
         }
     }

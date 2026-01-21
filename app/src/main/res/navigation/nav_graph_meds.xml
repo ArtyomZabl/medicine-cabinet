@@ -85,9 +85,11 @@
         android:id="@+id/cameraFragment"
         android:name="com.example.android.medicinecabinet.addMedicine.cameraFragment.CameraFragment"
         android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" >
+        tools:layout="@layout/fragment_camera">
         <action
             android:id="@+id/action_cameraFragment_to_nameFragment2"
-            app:destination="@id/nameFragment2" />
+            app:destination="@id/nameFragment2"
+            app:popUpTo="@id/cameraFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

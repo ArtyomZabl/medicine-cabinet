@@ -59,6 +59,10 @@ class NameFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.textExpiration.text = ""
 
+        if (binding.medsImage.drawable == null) {
+            binding.medsImage.visibility = View.GONE
+        } else binding.medsImage.visibility = View.VISIBLE
+
         addMedicineViewModel.navToDosage.observe(viewLifecycleOwner) {
             it?.let {
                 addMedicineViewModel.apply {
@@ -82,6 +86,7 @@ class NameFragment : Fragment() {
                             crossfade(true)
                             placeholder(R.drawable.placeholder)
                         }
+                        binding.medsImage.visibility = View.VISIBLE
                     }
                 }
             }
@@ -112,6 +117,7 @@ class NameFragment : Fragment() {
         }
 
         var initialBottomMargin = binding.button.marginBottom
+        var initialContentPadding = binding.contentLayout.paddingBottom
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             //Получение высоты клавиатуры
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
@@ -125,10 +131,24 @@ class NameFragment : Fragment() {
 
             val offset = (imeHeight - bottomNavHeight).coerceAtLeast(0)
 
-            val lp = binding.button.layoutParams as ConstraintLayout.LayoutParams
+            //Поднимаем кнопку
+            val lp = binding.button.layoutParams as CoordinatorLayout.LayoutParams
             Log.d("initialBottomMargin", "initialBottomMargin - $initialBottomMargin")
             lp.bottomMargin = initialBottomMargin + offset
             binding.button.layoutParams = lp
+
+            //Поднимаем высоту ScrollView
+            binding.contentLayout.setPadding(
+                binding.contentLayout.paddingLeft,
+                binding.contentLayout.paddingTop,
+                binding.contentLayout.paddingRight,
+                initialContentPadding + 2 * initialBottomMargin + offset + binding.button.height
+            )
+
+            // Скролл в самый низ
+            binding.scroll.post {
+                binding.scroll.smoothScrollTo(0, binding.contentLayout.height)
+            }
 
             insets
         }
