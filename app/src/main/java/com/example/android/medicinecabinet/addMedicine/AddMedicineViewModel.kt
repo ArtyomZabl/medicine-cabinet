@@ -6,7 +6,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -127,6 +126,7 @@ class AddMedicineViewModel(
     }
 
     private var _imagePath = MutableLiveData<String?>()
+    val imagePath: LiveData<String?> get() = _imagePath
 
     suspend fun downloadImage(url: String) {
         val loader = ImageLoader(appContext)

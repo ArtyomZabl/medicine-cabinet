@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -24,8 +25,10 @@ import com.example.android.medicinecabinet.utils.Functions.setMarginTop
 import kotlinx.coroutines.launch
 import androidx.navigation.NavOptions
 import androidx.navigation.navGraphViewModels
+import coil.load
 import com.example.android.medicinecabinet.utils.Functions.setMarginStart
 import com.example.android.medicinecabinet.utils.WeekDay
+import java.io.File
 
 class ResultFragment : Fragment() {
     lateinit var binding: FragmentAdd4ResultBinding
@@ -117,6 +120,30 @@ class ResultFragment : Fragment() {
 
         binding.rcViewTakingTime.adapter = adapter
         binding.rcViewTakingTime.layoutManager = LinearLayoutManager(context)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addMedicineViewModel.product.collect { product ->
+                    product?.let {
+                        binding.medImage.load(product.imageUrl) {
+                            crossfade(true)
+                            placeholder(R.drawable.placeholder)
+                    }
+                        binding.medImage.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+
+        /*addMedicineViewModel.imagePath.observe(viewLifecycleOwner) { imagePath ->
+            if (!imagePath.isNullOrEmpty()) {
+                binding.medImage.visibility = View.VISIBLE
+                binding.medImage.load(imagePath) {
+                    crossfade(true)
+                    placeholder(R.drawable.placeholder)
+                }
+            } else binding.medImage.visibility = View.GONE
+        }*/
 
         binding.tvName.text = addMedicineViewModel.textName.value
         binding.tvQuantity.text = addMedicineViewModel.textQuantity.value.toString()

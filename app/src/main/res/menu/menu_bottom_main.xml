@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_graph_home"
-        android:title="HomeScreen" />
+        android:title="HomeScreen"
+        android:icon="@android:drawable/ic_menu_today" />
 
     <item
         android:id="@+id/nav_graph_meds"
-        android:title="All medicines" />
+        android:title="All medicines"
+        android:icon="@android:drawable/ic_menu_agenda" />
 
     <item
         android:id="@+id/nav_grahp_settings"
-        android:title="Settings" />
+        android:title="Settings"
+        android:icon="@android:drawable/ic_menu_preferences" />
 </menu>

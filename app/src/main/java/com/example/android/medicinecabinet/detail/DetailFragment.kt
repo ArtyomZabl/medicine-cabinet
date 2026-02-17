@@ -80,6 +80,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 medQuantity.text = medicine.quantity.toString()
                 code.text = medicine.code
 
+                /*if (medicine.imagePath.isNullOrEmpty()){
+                    medImage.setImage
+                }*/
+
                 if (medicine.startTakingDate != null) {
                     tvDateStart.text = medicine.startTakingDate
                     isTakingDate(medicine)
