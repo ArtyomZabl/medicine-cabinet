@@ -135,16 +135,6 @@ class ResultFragment : Fragment() {
             }
         }
 
-        /*addMedicineViewModel.imagePath.observe(viewLifecycleOwner) { imagePath ->
-            if (!imagePath.isNullOrEmpty()) {
-                binding.medImage.visibility = View.VISIBLE
-                binding.medImage.load(imagePath) {
-                    crossfade(true)
-                    placeholder(R.drawable.placeholder)
-                }
-            } else binding.medImage.visibility = View.GONE
-        }*/
-
         binding.tvName.text = addMedicineViewModel.textName.value
         binding.tvQuantity.text = addMedicineViewModel.textQuantity.value.toString()
 

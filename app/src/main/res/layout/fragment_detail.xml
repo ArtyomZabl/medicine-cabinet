@@ -47,14 +47,14 @@
 
 
                 <ImageView
-                    android:id="@+id/medImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/med_image"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
                     android:layout_marginTop="28dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/paracetamol" />
@@ -74,7 +74,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/medImage" />
+                    app:layout_constraintTop_toBottomOf="@+id/med_image" />
 
                 <TextView
                     android:id="@+id/med_quantity"

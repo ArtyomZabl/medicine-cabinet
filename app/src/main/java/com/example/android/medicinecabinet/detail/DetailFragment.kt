@@ -21,6 +21,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
 import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineDatabase
@@ -33,6 +34,7 @@ import com.example.android.medicinecabinet.utils.DeleteDialogFragment
 import com.example.android.medicinecabinet.utils.Functions.setMarginTop
 import com.example.android.medicinecabinet.utils.WeekDay
 import kotlinx.coroutines.launch
+import java.io.File
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
@@ -75,14 +77,19 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         detailViewModel.medicine.observe(viewLifecycleOwner, Observer { medicine ->
             binding.apply {
-                medImage.setImageResource(R.drawable.paracetamol)
                 medName.text = medicine.name
                 medQuantity.text = medicine.quantity.toString()
                 code.text = medicine.code
 
-                /*if (medicine.imagePath.isNullOrEmpty()){
-                    medImage.setImage
-                }*/
+                if (!medicine.imagePath.isNullOrEmpty()) {
+                    medImage.load(File(medicine.imagePath)) {
+                        crossfade(true)
+                        placeholder(R.drawable.placeholder)
+                    }
+                    medImage.visibility = View.VISIBLE
+
+                } else medImage.visibility = View.GONE
+
 
                 if (medicine.startTakingDate != null) {
                     tvDateStart.text = medicine.startTakingDate
