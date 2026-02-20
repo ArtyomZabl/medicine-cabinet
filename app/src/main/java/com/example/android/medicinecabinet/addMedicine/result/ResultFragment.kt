@@ -69,7 +69,8 @@ class ResultFragment : Fragment() {
                 binding.layoutWeekDays.setMarginTop(0)
                 binding.layoutWeekDays.visibility = View.GONE
 
-                binding.tvIntakeDays.visibility = View.GONE
+                binding.tvIntakeDays.text = "Каждый день"
+                binding.tvIntakeDays.visibility = View.VISIBLE
                 binding.tvIntakeDays.setMarginTop(8)
 
                 isTakingTimes()
