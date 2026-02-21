@@ -11,363 +11,380 @@
             type="com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurface"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:title="ПРОСМОТР СВЕДЕНИЙ"
-            app:titleCentered="true" />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/med_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="1:1" />
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:text="Name"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_title_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/med_image" />
-
-        <TextView
-            android:id="@+id/tv_quantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="0"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_title_medium"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_name"
-            app:layout_constraintStart_toEndOf="@+id/tv_name"
-            app:layout_constraintTop_toTopOf="@+id/tv_name" />
-
-        <TextView
-            android:id="@+id/tv_dosage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="dosage"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_title_medium"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tv_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name" />
-
-        <TextView
-            android:id="@+id/tv_unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="мг"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_title_medium"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_dosage"
-            app:layout_constraintStart_toEndOf="@+id/tv_dosage"
-            app:layout_constraintTop_toTopOf="@+id/tv_dosage" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout_schedule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_dosage">
-
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                app:cardBackgroundColor="@color/cv_background_light"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:title="ПРОСМОТР СВЕДЕНИЙ"
+                app:titleCentered="true" />
+        </com.google.android.material.appbar.AppBarLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="4dp">
-
-                    <TextView
-                        android:id="@+id/tv_schedule"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="8dp"
-                        android:text="График"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_title_medium" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_week_days"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:weightSum="7">
-
-                        <TextView
-                            android:id="@+id/day_mon"
-                            style="@style/DayCicrleSelector"
-                            android:text="П" />
-
-                        <TextView
-                            android:id="@+id/day_tue"
-                            style="@style/DayCicrleSelector"
-                            android:text="В" />
-
-                        <TextView
-                            android:id="@+id/day_wed"
-                            style="@style/DayCicrleSelector"
-                            android:text="С" />
-
-                        <TextView
-                            android:id="@+id/day_thu"
-                            style="@style/DayCicrleSelector"
-                            android:text="Ч" />
-
-                        <TextView
-                            android:id="@+id/day_fri"
-                            style="@style/DayCicrleSelector"
-                            android:text="П" />
-
-                        <TextView
-                            android:id="@+id/day_sat"
-                            style="@style/DayCicrleSelector"
-                            android:text="С" />
-
-                        <TextView
-                            android:id="@+id/day_sun"
-                            style="@style/DayCicrleSelector"
-                            android:text="В" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tv_intake_days"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="8dp"
-                        android:layout_marginTop="8dp"
-                        android:text="INTAKE DAYS"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_body" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_taking_times"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraint_layout_schedule">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.cardview.widget.CardView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                app:cardBackgroundColor="@color/cv_background_light"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
+                tools:context=".addMedicine.schedule.AddScheduleFragment">
+
+
+
+            <ImageView
+                android:id="@+id/med_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="8dp">
-
-                    <TextView
-                        android:id="@+id/tv_taking_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Время приёма"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/text_title_medium" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rc_view_taking_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"/>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout_duration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="85dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_taking_times"
-            app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
             <TextView
-                android:id="@+id/tv_duration"
+                android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
-                android:text="Длительность"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:text="Name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_title_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/med_image" />
 
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_title_medium"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+                app:layout_constraintStart_toEndOf="@+id/tv_name"
+                app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
+            <TextView
+                android:id="@+id/tv_dosage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="dosage"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_title_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+            <TextView
+                android:id="@+id/tv_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="мг"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_title_medium"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_dosage"
+                app:layout_constraintStart_toEndOf="@+id/tv_dosage"
+                app:layout_constraintTop_toTopOf="@+id/tv_dosage" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout_schedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="8dp"
-                app:cardBackgroundColor="@color/cv_background_light"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_duration">
+                app:layout_constraintTop_toBottomOf="@+id/tv_dosage">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="8dp">
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    app:cardBackgroundColor="@color/cv_background_light"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/tv_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ДАТА НАЧАЛА"
-                        android:textSize="@dimen/text_body"
-                        app:layout_constraintEnd_toStartOf="@+id/guideline_center"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cv_date_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="@color/cv_background_dark"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_1">
-
-                        <TextView
-                            android:id="@+id/tv_date_start"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="4dp"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:text="1 января (сегодня)"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/text_body" />
-                    </androidx.cardview.widget.CardView>
-
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline_center"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.5" />
-
-                    <TextView
-                        android:id="@+id/tv_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ДАТА ОКОНЧАНИЯ"
-                        android:textSize="@dimen/text_body"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/guideline_center"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/cv_date_end"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        app:cardBackgroundColor="@color/cv_background_light"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="0dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/guideline_center"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_2">
+                        android:paddingBottom="4dp">
 
                         <TextView
-                            android:id="@+id/tv_date_end"
+                            android:id="@+id/tv_schedule"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="8dp"
+                            android:text="График"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_title_medium" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_week_days"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:weightSum="7">
+
+                            <TextView
+                                android:id="@+id/day_mon"
+                                style="@style/DayCicrleSelector"
+                                android:text="П" />
+
+                            <TextView
+                                android:id="@+id/day_tue"
+                                style="@style/DayCicrleSelector"
+                                android:text="В" />
+
+                            <TextView
+                                android:id="@+id/day_wed"
+                                style="@style/DayCicrleSelector"
+                                android:text="С" />
+
+                            <TextView
+                                android:id="@+id/day_thu"
+                                style="@style/DayCicrleSelector"
+                                android:text="Ч" />
+
+                            <TextView
+                                android:id="@+id/day_fri"
+                                style="@style/DayCicrleSelector"
+                                android:text="П" />
+
+                            <TextView
+                                android:id="@+id/day_sat"
+                                style="@style/DayCicrleSelector"
+                                android:text="С" />
+
+                            <TextView
+                                android:id="@+id/day_sun"
+                                style="@style/DayCicrleSelector"
+                                android:text="В" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_intake_days"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="8dp"
+                            android:layout_marginTop="8dp"
+                            android:text="INTAKE DAYS"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_body" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_taking_times"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraint_layout_schedule">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    app:cardBackgroundColor="@color/cv_background_light"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="8dp">
+
+                        <TextView
+                            android:id="@+id/tv_taking_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="4dp"
-                            android:layout_marginStart="0dp"
-                            android:layout_marginEnd="4dp"
-                            android:text="Нет"
-                            android:textColor="@color/grey"
-                            android:textSize="@dimen/text_body" />
-                    </androidx.cardview.widget.CardView>
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:text="Время приёма"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_title_medium" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rc_view_taking_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="85dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_taking_times"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Длительность"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_title_medium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    app:cardBackgroundColor="@color/cv_background_light"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_duration">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/tv_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ДАТА НАЧАЛА"
+                            android:textSize="@dimen/text_body"
+                            app:layout_constraintEnd_toStartOf="@+id/guideline_center"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_date_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="@color/cv_background_dark"
+                            app:cardCornerRadius="14dp"
+                            app:cardElevation="0dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_1">
+
+                            <TextView
+                                android:id="@+id/tv_date_start"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="4dp"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:text="1 января (сегодня)"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/text_body" />
+                        </androidx.cardview.widget.CardView>
+
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/guideline_center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_percent="0.5" />
+
+                        <TextView
+                            android:id="@+id/tv_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ДАТА ОКОНЧАНИЯ"
+                            android:textSize="@dimen/text_body"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/guideline_center"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_date_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:cardBackgroundColor="@color/cv_background_light"
+                            app:cardCornerRadius="14dp"
+                            app:cardElevation="0dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/guideline_center"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_2">
+
+                            <TextView
+                                android:id="@+id/tv_date_end"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="4dp"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginEnd="4dp"
+                                android:text="Нет"
+                                android:textColor="@color/grey"
+                                android:textSize="@dimen/text_body" />
+                        </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/btn_done"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="8dp"
             android:onClick="@{() -> addMedicineViewModel.onMedsClicked()}"
             android:text="ГОТОВО"
             android:textSize="@dimen/text_btn_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_gravity="bottom|center"/>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 </layout>
