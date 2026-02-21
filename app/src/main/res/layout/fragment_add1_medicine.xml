@@ -79,7 +79,7 @@
                         android:hint="Name"
                         android:inputType="text"
                         android:lines="1"
-                        android:text="@{addMedicineViewModel.product.name}" />
+                        android:text="@={addMedicineViewModel.textName}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -99,6 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Quantity"
+                        android:text="@={addMedicineViewModel.textQuantity}"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -124,9 +125,9 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="32dp"
             android:layout_marginBottom="16dp"
-            android:enabled="false"
+            android:enabled="@{addMedicineViewModel.isNameNextEnabled()}"
             android:onClick="@{() -> addMedicineViewModel.navNextToDosage()}"
-            android:text="DONE"
+            android:text="Далее"
             android:textSize="@dimen/text_btn_medium"
             android:textStyle="bold"
             android:layout_gravity="bottom"/>

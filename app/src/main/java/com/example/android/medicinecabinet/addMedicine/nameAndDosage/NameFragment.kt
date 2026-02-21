@@ -63,13 +63,18 @@ class NameFragment : Fragment() {
             binding.medsImage.visibility = View.GONE
         } else binding.medsImage.visibility = View.VISIBLE
 
+        Log.d("NameText", "NameText: ${binding.textName.text}")
+
         addMedicineViewModel.navToDosage.observe(viewLifecycleOwner) {
             it?.let {
                 addMedicineViewModel.apply {
-                    textName.value = binding.textName.text.toString().trim()
-                    textQuantity.value = binding.textQuantity.text.toString().toIntOrNull()
+                    //textName.value = binding.textName.text.toString().trim()
+                    //textQuantity.value = binding.textQuantity.text.toString()
                     textExpiration.value = binding.textExpiration.text.toString().trim()
+
+                    if(product.value?.name != textName.value) changeProductName(textName.value)
                 }
+
                 findNavController().navigate(R.id.action_nameFragment2_to_dosageFragment)
                 addMedicineViewModel.navNextToDosageDone()
                 Log.d("Saving", "Saved ${addMedicineViewModel.textName.value}")
@@ -79,7 +84,9 @@ class NameFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 addMedicineViewModel.product.collect {
+
                     it?.let { product ->
+                        Log.d("Product", "product collect colled ")
                         addMedicineViewModel.textName.value = product.name.toString().trim()
                         Log.d("IMAGE_URL", product.imageUrl ?: "null")
                         binding.medsImage.load(product.imageUrl) {
@@ -152,18 +159,5 @@ class NameFragment : Fragment() {
 
             insets
         }
-
-        fun validateFields() {
-            binding.apply {
-                val isNameValid = textName.text?.isNotBlank() == true
-                val isQuantityValid = textQuantity.text?.isNotBlank() == true
-                val allValid = isNameValid && isQuantityValid
-
-                binding.button.isEnabled = allValid
-            }
-        }
-
-        binding.textName.doOnTextChanged { _, _, _, _ -> validateFields() }
-        binding.textQuantity.doOnTextChanged { _, _, _, _ -> validateFields() }
     }
 }

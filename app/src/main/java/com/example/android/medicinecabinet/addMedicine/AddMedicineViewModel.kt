@@ -105,6 +105,13 @@ class AddMedicineViewModel(
     private val _product = MutableStateFlow<ProductInfo?>(null)
     val product: StateFlow<ProductInfo?> = _product
 
+    fun setProductToNull() {
+        _product.value = null
+    }
+
+    fun changeProductName(name: String?) {
+        _product.value?.name = name
+    }
 
     fun loadProduct(barcode: String) {
         viewModelScope.launch {
@@ -159,8 +166,8 @@ class AddMedicineViewModel(
     }
 
     val textName = MutableLiveData<String>()
-    val textQuantity = MutableLiveData<Int?>()
-    val textDosage = MutableLiveData<Float?>()
+    val textQuantity = MutableLiveData<String?>()
+    val textDosage = MutableLiveData<String?>()
     val selectedUnit = MutableLiveData<String?>()
     val textExpiration = MutableLiveData<String?>()
 
@@ -182,9 +189,21 @@ class AddMedicineViewModel(
     }
 
 
+    val isNameNextEnabled = MediatorLiveData<Boolean>().apply {
+        addSource(textName) { value = !it.isNullOrBlank() && !textQuantity.value.isNullOrBlank()  }
+        addSource(textQuantity) { value = !it.isNullOrBlank() && !textName.value.isNullOrBlank() }
+    }
+
     // VIEW MODEL FRAGMENT ADD 2 DOSAGE
 
     val units = listOf("мг", "мкг", "г", "мл", "%")
+
+    val isDosageNextEnabled = MediatorLiveData<Boolean>().apply {
+        addSource(textDosage) { value = !it.isNullOrBlank() && !selectedUnit.value.isNullOrBlank() }
+        addSource(selectedUnit) { value = !textDosage.value.isNullOrBlank() && !it.isNullOrBlank() }
+
+    }
+
 
     private var _onClickNext = MutableSharedFlow<Unit>()
     val onClickNext = _onClickNext.asSharedFlow()
@@ -468,9 +487,9 @@ class AddMedicineViewModel(
             val newMedicine = Medicine.MedicineBuilder()
                 .name(textName.value ?: "NULL")
                 .image(_imagePath.value)
-                .quantity(textQuantity.value)
+                .quantity(textQuantity.value?.toInt())
                 .expirationDate(textExpiration.value)
-                .dosage(textDosage.value)
+                .dosage(textDosage.value?.toFloat())
                 .unit(selectedUnit.value)
                 .startTakingDate(_selectedStartTakingDate.value)
                 .endTakingDate(_selectedEndTakingDate.value)
@@ -496,6 +515,34 @@ class AddMedicineViewModel(
             _navigateAfterSave.emit(Unit)
         }
 
+    }
+
+    fun resetAddMedicineState() {
+        // Сброс информации о продукте (от сканера)
+        _code.value = null
+        resetUiState() // Устанавливает _uiState в ProductUiState.Idle
+        setProductToNull() // Устанавливает _product в null
+        _imagePath.value = null
+
+        // Сброс полей с первого экрана (Название и количество)
+        textName.value = "" // или null, если допускается
+        textQuantity.value = null
+        textExpiration.value = null
+        _selectedDate.value = null
+
+        // Сброс полей со второго экрана (Дозировка)
+        textDosage.value = null
+        selectedUnit.value = null
+
+        // Сброс полей с третьего экрана (Расписание)
+        _selectedIntakeInterval.value = intakeInterval.first() // "По мере необходимости"
+        _daysInterval.value = 2 // Значение по умолчанию
+        clearTakingTimes() // Очищает список времени приема
+        clearSelectedDays() // Очищает список выбранных дней
+
+        // Сброс полей с экрана изменения расписания
+        _selectedStartTakingDate.value = null
+        _selectedEndTakingDate.value = null
     }
 
 }

@@ -33,6 +33,8 @@ class HowToAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        addMedicineViewModel.resetAddMedicineState()
+
         binding.btnManual.setOnClickListener {
             findNavController().navigate(R.id.action_howToAddFragment2_to_addMedicineFragment2)
         }

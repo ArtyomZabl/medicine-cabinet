@@ -40,13 +40,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_dosage"
             style="@style/EdTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Maximum dose"
-            android:inputType="number"
+            android:text="@={addMedicineViewModel.textDosage}"
+            android:inputType="numberDecimal"
             app:layout_constraintHorizontal_bias="0.495" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -81,6 +82,7 @@
         android:text="Далее"
         android:textSize="@dimen/text_btn_medium"
         android:clickable="false"
+        android:enabled="@{addMedicineViewModel.isDosageNextEnabled}"
         android:onClick="@{() -> addMedicineViewModel.onNextClicked()}"
         app:layout_constraintBottom_toTopOf="@+id/btn_skip"
         app:layout_constraintEnd_toEndOf="@+id/btn_skip"

@@ -62,27 +62,12 @@ class DosageFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 addMedicineViewModel.apply {
                     onClickNext.collect {
-                        textDosage.value = binding.textDosage.text.toString().toFloatOrNull()
+                        // textDosage.value = binding.textDosage.text.toString().toFloatOrNull()
 
                         findNavController().navigate(R.id.action_dosageFragment_to_addScheduleFragment)
                     }
                 }
             }
-        }
-
-        fun validateFields() {
-            val isTextDosageValid = binding.textDosage.text?.isNotBlank() == true
-            val isSelectedUnitValid =
-                addMedicineViewModel.selectedUnit.value?.isNotBlank() == true
-            val allValid = isSelectedUnitValid && isTextDosageValid
-
-            binding.btnNext.isEnabled = allValid
-        }
-
-        binding.textDosage.doOnTextChanged { _, _, _, _ -> validateFields() }
-        binding.autoCompleteDosageUnit.doOnTextChanged { text, _, _, _ ->
-            addMedicineViewModel.selectedUnit.value = text?.toString()?.trim()
-            validateFields()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -94,6 +79,7 @@ class DosageFragment : Fragment() {
                 }
             }
         }
+
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
