@@ -1,7 +1,6 @@
 package com.example.android.medicinecabinet.addMedicine.cameraFragment
 
 import android.Manifest
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,7 +11,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -21,26 +19,20 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.example.android.medicinecabinet.MainActivity
 import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel
-import com.example.android.medicinecabinet.data.productInfo.ProductInfo
 import com.example.android.medicinecabinet.databinding.FragmentCameraBinding
 import com.example.android.medicinecabinet.utils.ProductUiState
+import com.example.android.medicinecabinet.utils.TryAgainDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
 
 
 class CameraFragment : Fragment() {
@@ -50,6 +42,9 @@ class CameraFragment : Fragment() {
     }
     private lateinit var barcodeScanner: BarcodeScanner
 
+    private var cameraProvider: ProcessCameraProvider? = null
+    private var isScanning = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,7 +52,7 @@ class CameraFragment : Fragment() {
     ): View? {
         Log.d("CameraFragment", "onCreate loaded")
         addMedicineViewModel.setCode(null)
-        addMedicineViewModel.resetUiState()
+        addMedicineViewModel.resetCameraUiState()
         binding = FragmentCameraBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -78,16 +73,29 @@ class CameraFragment : Fragment() {
         requestCameraPermission()
 
 
-        addMedicineViewModel.uiState.observe(viewLifecycleOwner) { state ->
+        addMedicineViewModel.uiStateCamera.observe(viewLifecycleOwner) { state ->
             when (state) {
-                is ProductUiState.Loading -> showLoader()
+                is ProductUiState.Loading -> {
+                    showLoader()
+                }
                 is ProductUiState.Success -> {
                     findNavController().navigate(R.id.action_cameraFragment_to_nameFragment2)
                 }
 
-                is ProductUiState.Error -> showError()
+                is ProductUiState.Error -> {
+                    hideLoader()
+                    TryAgainDialog(startCamera = {
+                        startCamera()
+                    }).show(parentFragmentManager, "Try Arain")
+                    addMedicineViewModel.setCode(null)
+
+                }
                 else -> Unit
             }
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
     }
 
@@ -95,7 +103,8 @@ class CameraFragment : Fragment() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+            cameraProvider = cameraProviderFuture.get()
+            isScanning = true
 
             val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(binding.previewView.surfaceProvider)
@@ -111,7 +120,8 @@ class CameraFragment : Fragment() {
                 processImage(imageProxy)
             }
 
-            cameraProvider.bindToLifecycle(
+            cameraProvider?.unbindAll()
+            cameraProvider?.bindToLifecycle(
                 viewLifecycleOwner,
                 CameraSelector.DEFAULT_BACK_CAMERA,
                 preview,
@@ -146,7 +156,11 @@ class CameraFragment : Fragment() {
     }
 
     private fun onBarcodeDetected(code: String) {
-        Log.d("BARCODE", "Barcode is $code")
+        if (!isScanning) return
+        isScanning = false
+
+        cameraProvider?.unbindAll()
+
         addMedicineViewModel.loadProduct(code)
         addMedicineViewModel.setCode(code)
     }
@@ -212,8 +226,9 @@ class CameraFragment : Fragment() {
         binding.progressBar.show()
     }
 
-    private fun showError() {
+    private fun hideLoader(){
         binding.progressBar.isVisible = false
-        Snackbar.make(binding.root, "Ошибка распознавания", Snackbar.LENGTH_LONG).show()
+        binding.progressBar.hide()
     }
+
 }

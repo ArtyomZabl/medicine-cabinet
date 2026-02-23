@@ -2,7 +2,6 @@ package com.example.android.medicinecabinet.addMedicine
 
 
 import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
@@ -10,7 +9,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
@@ -34,7 +32,6 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import java.io.File
 import java.io.FileOutputStream
-import java.net.URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -44,8 +41,9 @@ class AddMedicineViewModel(
     application: Application
 ) : AndroidViewModel(application) {
     private val appContext = getApplication<Application>().applicationContext
-    // CODE
 
+
+    // CODE
     private var _code = MutableLiveData<String?>()
     val code: LiveData<String?> get() = _code
 
@@ -95,11 +93,15 @@ class AddMedicineViewModel(
             }
         }
 
-    private var _uiState = MutableLiveData<ProductUiState>(ProductUiState.Idle)
-    val uiState: LiveData<ProductUiState> get() = _uiState
+    private var _uiStateCamera = MutableLiveData<ProductUiState>(ProductUiState.Idle)
+    val uiStateCamera: LiveData<ProductUiState> get() = _uiStateCamera
 
-    fun resetUiState() {
-        _uiState.value = ProductUiState.Idle
+    fun resetCameraUiState() {
+        _uiStateCamera.value = ProductUiState.Idle
+    }
+
+    fun changeCameraUiState(uiState: ProductUiState){
+        _uiStateCamera.value = uiState
     }
 
     private val _product = MutableStateFlow<ProductInfo?>(null)
@@ -115,19 +117,19 @@ class AddMedicineViewModel(
 
     fun loadProduct(barcode: String) {
         viewModelScope.launch {
-            _uiState.value = ProductUiState.Loading
+            _uiStateCamera.value = ProductUiState.Loading
 
             try {
                 _product.value = fetchProductInfo(barcode)
 
 
                 if (_product.value != null) {
-                    _uiState.value = ProductUiState.Success(_product.value!!)
+                    _uiStateCamera.value = ProductUiState.Success(_product.value!!)
                 } else {
-                    _uiState.value = ProductUiState.Error("Такой товар не найден")
+                    _uiStateCamera.value = ProductUiState.Error("Такой товар не найден")
                 }
             } catch (e: Exception) {
-                _uiState.value = ProductUiState.Error("Ошибка загрузки")
+                _uiStateCamera.value = ProductUiState.Error("Ошибка загрузки")
             }
         }
     }
@@ -520,7 +522,7 @@ class AddMedicineViewModel(
     fun resetAddMedicineState() {
         // Сброс информации о продукте (от сканера)
         _code.value = null
-        resetUiState() // Устанавливает _uiState в ProductUiState.Idle
+        resetCameraUiState() // Устанавливает _uiState в ProductUiState.Idle
         setProductToNull() // Устанавливает _product в null
         _imagePath.value = null
 
