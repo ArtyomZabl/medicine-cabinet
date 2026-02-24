@@ -60,11 +60,11 @@ class HomeScreenFragment : Fragment() {
 
         homeScreenViewModel.onNavigateDetail.observe(viewLifecycleOwner) { medicineId ->
             medicineId?.let {
-                findNavController().navigate(
+                /*findNavController().navigate(
                     HomeScreenFragmentDirections.actionHomeScreenFragment2ToDetailFragment(
                         medicineId
                     )
-                )
+                )*/
                 homeScreenViewModel.onNavigateDetailDone()
             }
         }

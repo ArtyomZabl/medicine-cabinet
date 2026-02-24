@@ -19,6 +19,7 @@ roomCompiler = "2.8.0"
 uiDesktop = "1.7.0"
 runtimeAndroid = "1.9.4"
 roomCompilerVersion = "2.8.3"
+runtimeLivedata = "1.10.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -39,6 +40,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", version.ref = "uiDesktop" }
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompilerVersion" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

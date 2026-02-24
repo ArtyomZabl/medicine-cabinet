@@ -6,6 +6,17 @@
     app:startDestination="@id/medicinesFragment2">
 
     <fragment
+        android:id="@+id/medicinesFragment2"
+        android:name="com.example.android.medicinecabinet.medicines.MedicinesFragment"
+        android:label="MedicinesFragment">
+        <action
+            android:id="@+id/action_medicinesFragment2_to_howToAddFragment2"
+            app:destination="@id/howToAddFragment2" />
+        <action
+            android:id="@+id/action_medicinesFragment2_to_detailFragment22"
+            app:destination="@id/detailFragment2" />
+    </fragment>
+    <fragment
         android:id="@+id/howToAddFragment2"
         android:name="com.example.android.medicinecabinet.addMedicine.howToAdd.HowToAddFragment"
         android:label="fragment_how_to_add"
@@ -24,17 +35,6 @@
         <action
             android:id="@+id/action_nameFragment2_to_dosageFragment"
             app:destination="@id/dosageFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/medicinesFragment2"
-        android:name="com.example.android.medicinecabinet.medicines.MedicinesFragment"
-        android:label="MedicinesFragment">
-        <action
-            android:id="@+id/action_medicinesFragment2_to_howToAddFragment2"
-            app:destination="@id/howToAddFragment2" />
-        <action
-            android:id="@+id/action_medicinesFragment2_to_detailFragment22"
-            app:destination="@id/detailFragment2" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment2"

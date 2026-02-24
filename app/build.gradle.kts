@@ -54,6 +54,7 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.3.0")
     implementation("androidx.compose.ui:ui:1.6.7")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.7")
+    implementation(libs.androidx.runtime.livedata)
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")
     implementation("androidx.compose.material:material-icons-extended:1.6.7")
 
@@ -85,4 +86,5 @@ dependencies {
 
     implementation ("org.jsoup:jsoup:1.17.2")
     implementation ("io.coil-kt:coil:2.6.0")
+    implementation ("io.coil-kt:coil-compose:2.6.0")
 }
