@@ -31,7 +31,6 @@ class MedicinesAdapter(private val clickListener: MedicineListener) :
         adapterScope.launch {
             val item = when (viewType) {
                 Constance.ITEM_TYPE_MEDICINE -> list?.reversed()?.map { DataItem.MedicineItem(it) }
-                Constance.ITEM_TYPE_MEDICINE_TAKING -> list?.map { DataItem.TakingMedicine(it) }
                 else -> emptyList()
             }
             withContext(Dispatchers.Main) {
@@ -43,14 +42,12 @@ class MedicinesAdapter(private val clickListener: MedicineListener) :
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DataItem.MedicineItem -> Constance.ITEM_TYPE_MEDICINE
-            is DataItem.TakingMedicine -> Constance.ITEM_TYPE_MEDICINE_TAKING
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             Constance.ITEM_TYPE_MEDICINE -> MedicineViewHolder.from(parent)
-            Constance.ITEM_TYPE_MEDICINE_TAKING -> TakingMedicineViewHolder.from(parent)
             else -> throw illegalDecoyCallException("Unknow viewType $viewType")
         }
     }
@@ -62,11 +59,6 @@ class MedicinesAdapter(private val clickListener: MedicineListener) :
                 val medicineItem = getItem(position) as DataItem.MedicineItem
                 holder.bind(medicineItem.medicine, clickListener)
             }
-
-            is TakingMedicineViewHolder -> {
-                val medicineItem = getItem(position) as DataItem.TakingMedicine
-                holder.bind(medicineItem.medicine)
-            }
         }
 
         // Другой вариант кода, работает точно так же
@@ -74,25 +66,6 @@ class MedicinesAdapter(private val clickListener: MedicineListener) :
             is DataItem.MedicineItem -> (holder as MedicineViewHolder).bind(item.medicine, clickListener)
             is DataItem.TakingMedicine -> (holder as TakingMedicineViewHolder).bind(item.medicine)
         }*/
-    }
-
-    class TakingMedicineViewHolder(private val binding: TakingMedicineItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(medicine: Medicine) = with(binding) {
-            medsName.text = medicine.name
-
-            binding.medicine = medicine
-            executePendingBindings()
-        }
-
-        companion object {
-            fun from(parent: ViewGroup): TakingMedicineViewHolder {
-                val inflater = LayoutInflater.from(parent.context)
-                val binding = TakingMedicineItemBinding.inflate(inflater, parent, false)
-                return TakingMedicineViewHolder(binding)
-            }
-        }
     }
 
     class MedicineViewHolder(private val binding: MedicineItemBinding) :
@@ -172,10 +145,6 @@ class MedicineListener(val clickListener: (medicineId: Int) -> Unit) {
 
 sealed class DataItem {
     data class MedicineItem(val medicine: Medicine) : DataItem() {
-        override val id = medicine.medicineId
-    }
-
-    data class TakingMedicine(val medicine: Medicine) : DataItem() {
         override val id = medicine.medicineId
     }
 
