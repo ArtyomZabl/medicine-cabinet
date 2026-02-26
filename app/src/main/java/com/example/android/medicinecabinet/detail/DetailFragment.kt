@@ -52,7 +52,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             MedicineRepository(
                 MedicineDatabase.getDatabase(requireContext()).medicineDao(),
                 MedicineDatabase.getDatabase(requireContext()).takingTimeDao(),
-                MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao()
+                MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao(),
+                MedicineDatabase.getDatabase(requireContext()).medicineLogDao()
             )
         val factory = DetailViewModelFactory(repository)
         val detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]

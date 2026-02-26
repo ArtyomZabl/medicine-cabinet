@@ -3,17 +3,20 @@ package com.example.android.medicinecabinet.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
+import com.example.android.medicinecabinet.data.medicineLog.MedicineLog
 import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakingDays
 import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakingDaysDao
+import com.example.android.medicinecabinet.data.medicineLog.MedicineLogDao
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeDao
 
 class MedicineRepository(
     private val daoMeds: MedicineDao,
     private val daoTime: TakingTimeDao,
-    private val daoDays: SelectedTakingDaysDao
+    private val daoDays: SelectedTakingDaysDao,
+    private val daoMedsLog: MedicineLogDao
 ) {
-
+    // REPOSITORY MEDICINE
     val allMedicines: LiveData<List<Medicine>> = daoMeds.getAllMedicines()
 
     suspend fun insert(medicine: Medicine): Long {
@@ -37,7 +40,7 @@ class MedicineRepository(
     }
 
 
-
+    // REPOSITORY TAKING TIME
     private val _medicineId = MutableLiveData<Int>()
     val medicineId: LiveData<Int> get() = _medicineId
 
@@ -57,7 +60,7 @@ class MedicineRepository(
 
 
 
-
+    // REPOSITORY SELECTED DAYS
     val allDaysThisMeds: LiveData<List<SelectedTakingDays>> = _medicineId.switchMap { id ->
         daoDays.getAllDaysThisMeds(id)
     }
@@ -66,4 +69,11 @@ class MedicineRepository(
         daoDays.insertAll(selectedTakingDay)
     }
 
+
+
+    // REPOSITORY MEDICINE LOG
+
+    fun getMedsLogByDate(medicineId: Int, date: String): LiveData<List<MedicineLog>> {
+        return daoMedsLog.getMedsLogByDate(medicineId, date)
+    }
 }

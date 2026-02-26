@@ -32,4 +32,7 @@ class HomeScreenViewModel(private val repository: MedicineRepository) : ViewMode
     }
 
 
+
+    fun getThisMedsLogByDate(medicineId: Int, date: String) = repository.getMedsLogByDate(medicineId, date)
+
 }

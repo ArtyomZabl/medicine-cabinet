@@ -37,7 +37,8 @@ class HomeScreenFragment : Fragment() {
             MedicineRepository(
                 MedicineDatabase.getDatabase(requireContext()).medicineDao(),
                 MedicineDatabase.getDatabase(requireContext()).takingTimeDao(),
-                MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao())
+                MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao(),
+                MedicineDatabase.getDatabase(requireContext()).medicineLogDao())
         val factory = HomeScreenViewModelFactory(repository)
         val homeScreenViewModel = ViewModelProvider(this, factory)[HomeScreenViewModel::class]
 

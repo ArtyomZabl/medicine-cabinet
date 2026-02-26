@@ -1,12 +1,12 @@
 package com.example.android.medicinecabinet.homeScreen
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,10 +17,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +45,8 @@ import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.data.MedicineDatabase
 import com.example.android.medicinecabinet.data.MedicineRepository
 import com.example.android.medicinecabinet.utils.CardBackgroundLight
+import java.time.LocalDate
+import java.time.LocalTime
 
 class HomeFragment : Fragment() {
     override fun onCreateView(
@@ -56,7 +58,8 @@ class HomeFragment : Fragment() {
         val repository = MedicineRepository(
             MedicineDatabase.getDatabase(requireContext()).medicineDao(),
             MedicineDatabase.getDatabase(requireContext()).takingTimeDao(),
-            MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao()
+            MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao(),
+            MedicineDatabase.getDatabase(requireContext()).medicineLogDao()
         )
         val factory = HomeScreenViewModelFactory(repository)
         val homeScreenViewModel = ViewModelProvider(this, factory)[HomeScreenViewModel::class.java]
@@ -103,6 +106,12 @@ fun HomeScreen(
                 val allTimesSorted = remember(allTimes) { allTimes.sortedBy { it.time } }
 
                 if (allTimesSorted.isNotEmpty()) {
+
+                    val medsLogByDate by homeScreenViewModel.getThisMedsLogByDate(
+                        medicine.medicineId,
+                        LocalDate.now().toString()
+                    ).observeAsState()
+                    Log.d("LocalDate", "LocalDate: ${LocalDate.now()}")
                     Card(
                         modifier = Modifier
                             .padding(8.dp)
@@ -143,8 +152,16 @@ fun HomeScreen(
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     items(allTimesSorted) { time ->
+                                        val isTaken = medsLogByDate?.any { log -> log.takingTimeId == time.id} == true
+                                        val localTime = LocalTime.now().toString()
                                         Card(
-                                            colors = CardDefaults.cardColors(CardBackgroundLight),
+                                            colors = CardDefaults.cardColors(
+                                                if(localTime <= time.time) {
+                                                    CardBackgroundLight
+                                                } else {
+                                                    if (isTaken) Color.Green else Color.Red
+                                                }
+                                            ),
                                             shape = RoundedCornerShape(8.dp)
                                         ) {
                                             Text(

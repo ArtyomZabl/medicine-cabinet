@@ -36,9 +36,11 @@ class MedicinesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val repository =
-            MedicineRepository(MedicineDatabase.getDatabase(requireContext()).medicineDao(),
+            MedicineRepository(
+                MedicineDatabase.getDatabase(requireContext()).medicineDao(),
                 MedicineDatabase.getDatabase(requireContext()).takingTimeDao(),
-                MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao())
+                MedicineDatabase.getDatabase(requireContext()).selectedTakingDaysDao(),
+                MedicineDatabase.getDatabase(requireContext()).medicineLogDao())
         val factory = MedicinesViewModelFactory(repository)
         val medicinesViewModel = ViewModelProvider(this, factory)[MedicinesViewModel::class.java]
 
