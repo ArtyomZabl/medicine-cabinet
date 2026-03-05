@@ -21,7 +21,7 @@ import com.example.android.medicinecabinet.data.takingTime.TakingTime
 )
 data class MedicineLog(
     @PrimaryKey(autoGenerate = true)
-    val logId: Int,
+    val logId: Int = 0,
 
     @ColumnInfo(name = "date_taken")
     val dateTaken: String,

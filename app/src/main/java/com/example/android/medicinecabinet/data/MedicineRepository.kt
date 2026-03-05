@@ -76,4 +76,16 @@ class MedicineRepository(
     fun getMedsLogByDate(medicineId: Int, date: String): LiveData<List<MedicineLog>> {
         return daoMedsLog.getMedsLogByDate(medicineId, date)
     }
+
+    fun getAllLogsByDate(date: String): LiveData<List<MedicineLog>> {
+        return daoMedsLog.getAllLogsThisDate(date)
+    }
+
+    suspend fun updateIsTakenState(logId: Int, isTaken: Boolean) {
+        daoMedsLog.updateIsTakenState(logId, isTaken)
+    }
+
+    suspend fun insert(medicineLog: MedicineLog){
+        daoMedsLog.insert(medicineLog)
+    }
 }

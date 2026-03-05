@@ -23,8 +23,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,8 +45,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import coil.compose.AsyncImage
 import com.example.android.medicinecabinet.R
+import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineDatabase
 import com.example.android.medicinecabinet.data.MedicineRepository
+import com.example.android.medicinecabinet.data.medicineLog.MedicineLog
+import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.utils.CardBackgroundLight
 import java.time.LocalDate
 import java.time.LocalTime
@@ -64,15 +70,24 @@ class HomeFragment : Fragment() {
         val factory = HomeScreenViewModelFactory(repository)
         val homeScreenViewModel = ViewModelProvider(this, factory)[HomeScreenViewModel::class.java]
 
+        homeScreenViewModel.updateLogsDate(LocalDate.now().toString())
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
             setContent {
                 HomeScreen(
-                    onNavigateMeds = {
-                        findNavController().navigate(R.id.action_homeFragment_to_detailFragment)
+                    showTakenDialog = { medicine, allTimes ->
+                        DialogChangeTakenState(
+                            medicine = medicine,
+                            allTimes = allTimes,
+                            onClickTaken = {
+
+                            },
+                            homeScreenViewModel = homeScreenViewModel
+                        ).show(parentFragmentManager, "Dialog")
                     },
-                    homeScreenViewModel = homeScreenViewModel
+                    homeScreenViewModel = homeScreenViewModel,
                 )
             }
         }
@@ -82,11 +97,14 @@ class HomeFragment : Fragment() {
 
 @Composable
 fun HomeScreen(
-    onNavigateMeds: () -> Unit,
+    showTakenDialog: (medicine: Medicine, allTimes: List<TakingTime>) -> Unit,
     homeScreenViewModel: HomeScreenViewModel
 ) {
     val rawMedicines by homeScreenViewModel.allTakingMedicines.observeAsState(emptyList())
     val medicines = remember(rawMedicines) { rawMedicines.reversed() }
+
+    val allMedsLogByDate by homeScreenViewModel.allMedsLogByDate.observeAsState(emptyList())
+
 
     Column(
         modifier = Modifier
@@ -107,11 +125,14 @@ fun HomeScreen(
 
                 if (allTimesSorted.isNotEmpty()) {
 
-                    val medsLogByDate by homeScreenViewModel.getThisMedsLogByDate(
-                        medicine.medicineId,
-                        LocalDate.now().toString()
-                    ).observeAsState()
-                    Log.d("LocalDate", "LocalDate: ${LocalDate.now()}")
+                    /*LaunchedEffect(medicine.medicineId) {
+                        homeScreenViewModel.getThisMedsLogByDate(medicine.medicineId, LocalDate.now().toString())
+                    }
+                    val medsLogByDate by homeScreenViewModel.medsLogByDate.observeAsState(emptyList())
+                    val medsLogByDate1 = remember { mutableStateOf(medsLogByDate) }*/
+
+                    val medsLogByDate = allMedsLogByDate.filter { it.medicineId == medicine.medicineId }
+
                     Card(
                         modifier = Modifier
                             .padding(8.dp)
@@ -121,7 +142,8 @@ fun HomeScreen(
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White
                         ),
-                        elevation = CardDefaults.cardElevation(2.dp)
+                        elevation = CardDefaults.cardElevation(2.dp),
+                        onClick = { showTakenDialog(medicine, allTimesSorted) }
                     ) {
                         Row(
                             modifier = Modifier
@@ -152,17 +174,20 @@ fun HomeScreen(
                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
                                     items(allTimesSorted) { time ->
-                                        val isTaken = medsLogByDate?.any { log -> log.takingTimeId == time.id} == true
+
+                                        val currentLog = medsLogByDate.find { it.takingTimeId == time.id }
+                                        val isTaken = currentLog?.isTaken
                                         val localTime = LocalTime.now().toString()
+
                                         Card(
                                             colors = CardDefaults.cardColors(
-                                                if(localTime <= time.time) {
+                                                if (localTime <= time.time) {
                                                     CardBackgroundLight
                                                 } else {
-                                                    if (isTaken) Color.Green else Color.Red
+                                                    if (isTaken == true) Color.Green else Color.Red
                                                 }
                                             ),
-                                            shape = RoundedCornerShape(8.dp)
+                                            shape = RoundedCornerShape(16.dp)
                                         ) {
                                             Text(
                                                 modifier = Modifier.padding(

@@ -3,9 +3,14 @@ package com.example.android.medicinecabinet.homeScreen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineRepository
+import com.example.android.medicinecabinet.data.medicineLog.MedicineLog
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class HomeScreenViewModel(private val repository: MedicineRepository) : ViewModel() {
 
@@ -32,7 +37,36 @@ class HomeScreenViewModel(private val repository: MedicineRepository) : ViewMode
     }
 
 
+    private val _logParams = MutableLiveData<Pair<Int, String>>()
 
-    fun getThisMedsLogByDate(medicineId: Int, date: String) = repository.getMedsLogByDate(medicineId, date)
+    fun getThisMedsLogByDate(medicineId: Int, date: String) {
+        _logParams.value = Pair(medicineId, date)
+    }
 
+    val medsLogByDate: LiveData<List<MedicineLog>> = _logParams.switchMap { params ->
+        repository.getMedsLogByDate(params.first, params.second)
+    }
+
+    private val _currentDate = MutableLiveData<String>()
+
+    fun updateLogsDate(date: String) {
+        _currentDate.value = date
+    }
+
+    val allMedsLogByDate: LiveData<List<MedicineLog>> = _currentDate.switchMap { date ->
+        repository.getAllLogsByDate(date)
+    }
+
+
+    fun updateIsTakenState(logId: Int, isTaken: Boolean) {
+        viewModelScope.launch {
+            repository.updateIsTakenState(logId, isTaken)
+        }
+    }
+
+    fun insertNewData(medicineLog: MedicineLog) {
+        viewModelScope.launch {
+            repository.insert(medicineLog)
+        }
+    }
 }
