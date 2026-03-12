@@ -2,6 +2,7 @@ package com.example.android.medicinecabinet.addMedicine
 
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
@@ -20,6 +21,7 @@ import com.example.android.medicinecabinet.data.productInfo.ProductInfo
 import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakingDays
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeUi
+import com.example.android.medicinecabinet.utils.Alarm
 import com.example.android.medicinecabinet.utils.DateFormatter
 import com.example.android.medicinecabinet.utils.ProductUiState
 import kotlinx.coroutines.Dispatchers
@@ -100,7 +102,7 @@ class AddMedicineViewModel(
         _uiStateCamera.value = ProductUiState.Idle
     }
 
-    fun changeCameraUiState(uiState: ProductUiState){
+    fun changeCameraUiState(uiState: ProductUiState) {
         _uiStateCamera.value = uiState
     }
 
@@ -151,7 +153,7 @@ class AddMedicineViewModel(
             result.compress(Bitmap.CompressFormat.PNG, 100, out)
         }
 
-        _imagePath.value = file.absolutePath
+        _imagePath.postValue(file.absolutePath)
     }
 
     // VIEW MODEL FRAGMENT ADD 1 NAME
@@ -192,7 +194,7 @@ class AddMedicineViewModel(
 
 
     val isNameNextEnabled = MediatorLiveData<Boolean>().apply {
-        addSource(textName) { value = !it.isNullOrBlank() && !textQuantity.value.isNullOrBlank()  }
+        addSource(textName) { value = !it.isNullOrBlank() && !textQuantity.value.isNullOrBlank() }
         addSource(textQuantity) { value = !it.isNullOrBlank() && !textName.value.isNullOrBlank() }
     }
 
@@ -304,6 +306,7 @@ class AddMedicineViewModel(
     fun clearTakingTimes() {
         _takingTimes.value = mutableListOf()
     }
+
 
     fun addTimesForMedicine(medsId: Long, takingTimes: List<TakingTimeUi>) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -454,18 +457,73 @@ class AddMedicineViewModel(
     )
     val navigateAfterSave = _navigateAfterSave.asSharedFlow()
 
+    private val _save = MutableSharedFlow<Unit>()
+    val save = _save.asSharedFlow()
+
     fun onMedsClicked() {
         viewModelScope.launch {
-            if (product.value?.imageUrl != null) {
-                downloadImage(_product.value?.imageUrl!!)
-            }
-            Log.d("ImagePath", "Image product - ${product.value?.imageUrl}")
-            Log.d("ImagePath", "Image LiveData - ${_imagePath.value}")
-            addNewMeds()
+            _save.emit(Unit)
         }
     }
 
-    fun addNewMeds() {
+    fun addNewMeds(context: Context) {
+        viewModelScope.launch {
+            product.value?.imageUrl?.let {url ->
+                try {
+                    downloadImage(url)
+                } catch (e: Exception) {
+                    Log.e("ERROR", "Ошибка загрузки фото: ${e.message}")
+                }
+            }
+
+
+            prepareDataBasedOnInterval()
+
+
+            viewModelScope.launch(Dispatchers.IO) {
+                val newMedicine = Medicine.MedicineBuilder()
+                    .name(textName.value ?: "NULL")
+                    .image(_imagePath.value)
+                    .quantity(textQuantity.value?.toInt())
+                    .expirationDate(textExpiration.value)
+                    .dosage(textDosage.value?.toFloat())
+                    .unit(selectedUnit.value)
+                    .startTakingDate(_selectedStartTakingDate.value)
+                    .endTakingDate(_selectedEndTakingDate.value)
+                    .intakeIntervalDays(daysInterval.value)
+                    .code(code.value)
+                    .description(_product.value?.description)
+                    .build()
+
+                val medsId = repository.insert(newMedicine)
+                Log.d("AddMedicineViewModel", "Meds ID now $medsId")
+                Log.d("AddMedicineViewModel", "Medicine has added $newMedicine")
+
+                val times = takingTimes.value ?: emptyList()
+
+                addTimesForMedicine(medsId, times)
+
+                Log.d("AddMedicineViewModel", "Times for medicine $times")
+
+                val days = selectedDays.value ?: emptyList()
+
+                addDaysForMedicine(medsId, days)
+
+                val timesForAlarm = times.map { time ->
+                    TakingTime(
+                        medicineId = medsId.toInt(),
+                        time = time.time
+                    )
+                }
+
+                Alarm.scheduleAlarm(context, newMedicine, timesForAlarm)
+
+                _navigateAfterSave.emit(Unit)
+            }
+        }
+    }
+
+    fun prepareDataBasedOnInterval() {
         when (selectedIntakeInterval.value) {
             "По мере необходимости" -> {
                 setSelectedStartTakingDate(null)
@@ -483,40 +541,6 @@ class AddMedicineViewModel(
             "В определённые дни" -> setDaysInterval(null)
             "Раз в несколько дней" -> clearSelectedDays()
         }
-
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val newMedicine = Medicine.MedicineBuilder()
-                .name(textName.value ?: "NULL")
-                .image(_imagePath.value)
-                .quantity(textQuantity.value?.toInt())
-                .expirationDate(textExpiration.value)
-                .dosage(textDosage.value?.toFloat())
-                .unit(selectedUnit.value)
-                .startTakingDate(_selectedStartTakingDate.value)
-                .endTakingDate(_selectedEndTakingDate.value)
-                .intakeIntervalDays(daysInterval.value)
-                .code(code.value)
-                .description(_product.value?.description)
-                .build()
-
-            val medsId = repository.insert(newMedicine)
-            Log.d("AddMedicineViewModel", "Meds ID now $medsId")
-            Log.d("AddMedicineViewModel", "Medicine has added $newMedicine")
-
-            val times = takingTimes.value ?: emptyList()
-
-            addTimesForMedicine(medsId, times)
-
-            Log.d("AddMedicineViewModel", "Times for medicine $times")
-
-            val days = selectedDays.value ?: emptyList()
-
-            addDaysForMedicine(medsId, days)
-
-            _navigateAfterSave.emit(Unit)
-        }
-
     }
 
     fun resetAddMedicineState() {

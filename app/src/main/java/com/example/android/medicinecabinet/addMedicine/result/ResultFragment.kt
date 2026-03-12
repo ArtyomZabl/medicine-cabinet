@@ -171,6 +171,13 @@ class ResultFragment : Fragment() {
 
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addMedicineViewModel.save.collect {
+                    addMedicineViewModel.addNewMeds(requireContext().applicationContext)
+                }
+            }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
