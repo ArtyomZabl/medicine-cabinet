@@ -49,7 +49,9 @@ It allows users to store medicines, receive reminders, and monitor whether a dos
 
 ## APK
 
-*Coming soon*
+You can download and test the application:
+
+[![Download](https://img.shields.io/badge/Download-APK-green)](https://github.com/ArtyomZabl/medicine-cabinet/releases)
 
 ---
 
@@ -58,7 +60,7 @@ It allows users to store medicines, receive reminders, and monitor whether a dos
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/MedicineCabinet.git
+git clone https://github.com/ArtyomZabl/medicine-cabinet.git
 ```
 
 2. Open the project in **Android Studio**
