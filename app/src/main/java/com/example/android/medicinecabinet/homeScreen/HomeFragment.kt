@@ -1,7 +1,6 @@
 package com.example.android.medicinecabinet.homeScreen
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,17 +16,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,13 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import coil.compose.AsyncImage
 import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineDatabase
 import com.example.android.medicinecabinet.data.MedicineRepository
-import com.example.android.medicinecabinet.data.medicineLog.MedicineLog
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.utils.CardBackgroundLight
 import java.time.LocalDate
@@ -59,7 +52,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val repository = MedicineRepository(
             MedicineDatabase.getDatabase(requireContext()).medicineDao(),
