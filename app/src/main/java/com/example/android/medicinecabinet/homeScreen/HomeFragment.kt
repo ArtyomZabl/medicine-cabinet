@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineDatabase
 import com.example.android.medicinecabinet.data.MedicineRepository
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
+import com.example.android.medicinecabinet.testing.AlarmDebugger
 import com.example.android.medicinecabinet.utils.CardBackgroundLight
 import java.time.LocalDate
 import java.time.LocalTime
@@ -52,7 +54,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
         val repository = MedicineRepository(
             MedicineDatabase.getDatabase(requireContext()).medicineDao(),
@@ -71,6 +73,9 @@ class HomeFragment : Fragment() {
             setContent {
                 HomeScreen(
                     showTakenDialog = { medicine, allTimes ->
+                        // Вызов отладки при открытии диалога
+                        AlarmDebugger.debugAlarmStatus(context, medicine, allTimes)
+
                         DialogChangeTakenState(
                             medicine = medicine,
                             allTimes = allTimes,
@@ -117,14 +122,8 @@ fun HomeScreen(
                 val allTimesSorted = remember(allTimes) { allTimes.sortedBy { it.time } }
 
                 if (allTimesSorted.isNotEmpty()) {
-
-                    /*LaunchedEffect(medicine.medicineId) {
-                        homeScreenViewModel.getThisMedsLogByDate(medicine.medicineId, LocalDate.now().toString())
-                    }
-                    val medsLogByDate by homeScreenViewModel.medsLogByDate.observeAsState(emptyList())
-                    val medsLogByDate1 = remember { mutableStateOf(medsLogByDate) }*/
-
-                    val medsLogByDate = allMedsLogByDate.filter { it.medicineId == medicine.medicineId }
+                    val medsLogByDate =
+                        allMedsLogByDate.filter { it.medicineId == medicine.medicineId }
 
                     Card(
                         modifier = Modifier
@@ -149,8 +148,17 @@ fun HomeScreen(
                                     modifier = Modifier
                                         .size(64.dp)
                                         .padding(end = 8.dp),
-                                    placeholder = painterResource(R.drawable.ic_launcher_foreground),
+                                    placeholder = painterResource(R.drawable.ic_medicine),
                                     contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Image(
+                                    modifier = Modifier
+                                        .size(64.dp)
+                                        .padding(end = 8.dp),
+                                    painter = painterResource(R.drawable.ic_medicine),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Fit
                                 )
                             }
                             Column(
@@ -168,19 +176,22 @@ fun HomeScreen(
                                 ) {
                                     items(allTimesSorted) { time ->
 
-                                        val currentLog = medsLogByDate.find { it.takingTimeId == time.id }
+                                        val currentLog =
+                                            medsLogByDate.find { it.takingTimeId == time.id }
                                         val isTaken = currentLog?.isTaken
                                         val localTime = LocalTime.now().toString()
 
                                         Card(
                                             colors = CardDefaults.cardColors(
-                                                if (localTime <= time.time) {
+                                                if (localTime <= time.time && isTaken == true) {
+                                                    Color(0xFF34C759)
+                                                } else if (localTime <= time.time) {
                                                     CardBackgroundLight
                                                 } else {
                                                     if (isTaken == true) Color.Green else Color.Red
                                                 }
                                             ),
-                                            shape = RoundedCornerShape(16.dp)
+                                            shape = RoundedCornerShape(14.dp)
                                         ) {
                                             Text(
                                                 modifier = Modifier.padding(

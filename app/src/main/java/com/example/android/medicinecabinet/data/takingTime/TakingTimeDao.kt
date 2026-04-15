@@ -9,10 +9,7 @@ import androidx.room.Query
 @Dao
 interface TakingTimeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(time: List<TakingTime>)
-
-    /*@Query("SELECT * FROM taking_time")
-    fun getAllMedicinesWithTimes(): LiveData<List<TakingTime>>*/
+    suspend fun insertAll(time: List<TakingTime>): List<Long>
 
     @Query("SELECT * FROM taking_time WHERE medicine_id = :id")
     fun getAllTimesThisMeds(id: Int): LiveData<List<TakingTime>>

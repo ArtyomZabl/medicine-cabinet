@@ -54,8 +54,8 @@ class MedicineRepository(
 
     fun getTimesThisMeds(medicineId: Int): LiveData<List<TakingTime>> = daoTime.getAllTimesThisMeds(medicineId)
 
-    suspend fun insertAllTimes(time: List<TakingTime>) {
-        daoTime.insertAll(time)
+    suspend fun insertAllTimes(time: List<TakingTime>): List<Long> {
+        return daoTime.insertAll(time)
     }
 
 

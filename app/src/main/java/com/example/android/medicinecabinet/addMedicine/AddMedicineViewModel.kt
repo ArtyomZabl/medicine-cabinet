@@ -308,19 +308,21 @@ class AddMedicineViewModel(
     }
 
 
-    fun addTimesForMedicine(medsId: Long, takingTimes: List<TakingTimeUi>) {
-        viewModelScope.launch(Dispatchers.IO) {
+    suspend fun addTimesForMedicine(medsId: Long, takingTimes: List<TakingTimeUi>): List<TakingTime> =
+        withContext(Dispatchers.IO) {
             val timesToInsert = takingTimes.map { time ->
                 TakingTime(
                     medicineId = medsId.toInt(),
                     time = time.time
                 )
             }
-            repository.insertAllTimes(timesToInsert)
-            Log.d("AddMedicineViewModel", "Times have been added - $timesToInsert")
-            Log.d("AddMedicineViewModel", "Meds ID now $medsId")
+            val ids = repository.insertAllTimes(timesToInsert)
+            val result = timesToInsert.mapIndexed { index, takingTime ->
+                takingTime.copy(id = ids[index].toInt())
+            }
+            Log.d("AddMedicineViewModel", "Times have been added with IDs: $result")
+            result
         }
-    }
 
     private var _changeSchedule = MutableSharedFlow<Unit>()
     val changeSchedule = _changeSchedule.asSharedFlow()
@@ -357,8 +359,8 @@ class AddMedicineViewModel(
         _selectedDays.value = mutableListOf()
     }
 
-    fun addDaysForMedicine(medsId: Long, weekDay: List<WeekDay>) {
-        viewModelScope.launch(Dispatchers.IO) {
+    suspend fun addDaysForMedicine(medsId: Long, weekDay: List<WeekDay>) =
+        withContext(Dispatchers.IO) {
             val daysToInsert = weekDay.map { day ->
                 SelectedTakingDays(
                     medicineId = medsId.toInt(),
@@ -367,7 +369,6 @@ class AddMedicineViewModel(
             }
             repository.insertAllDays(daysToInsert)
         }
-    }
 
 
     val isNextEnabled = MediatorLiveData<Boolean>().apply {
@@ -468,7 +469,7 @@ class AddMedicineViewModel(
 
     fun addNewMeds(context: Context) {
         viewModelScope.launch {
-            product.value?.imageUrl?.let {url ->
+            product.value?.imageUrl?.let { url ->
                 try {
                     downloadImage(url)
                 } catch (e: Exception) {
@@ -476,11 +477,9 @@ class AddMedicineViewModel(
                 }
             }
 
-
             prepareDataBasedOnInterval()
 
-
-            viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 val newMedicine = Medicine.MedicineBuilder()
                     .name(textName.value ?: "NULL")
                     .image(_imagePath.value)
@@ -495,28 +494,22 @@ class AddMedicineViewModel(
                     .description(_product.value?.description)
                     .build()
 
+                // 1. Сохраняем лекарство и получаем его реальный ID
                 val medsId = repository.insert(newMedicine)
+                val medicineWithId = newMedicine.copy(medicineId = medsId.toInt())
+
                 Log.d("AddMedicineViewModel", "Meds ID now $medsId")
-                Log.d("AddMedicineViewModel", "Medicine has added $newMedicine")
 
-                val times = takingTimes.value ?: emptyList()
+                // 2. Сохраняем время приема и получаем список с реальными ID
+                val uiTimes = takingTimes.value ?: emptyList()
+                val timesWithIds = addTimesForMedicine(medsId, uiTimes)
 
-                addTimesForMedicine(medsId, times)
-
-                Log.d("AddMedicineViewModel", "Times for medicine $times")
-
+                // 3. Сохраняем дни
                 val days = selectedDays.value ?: emptyList()
-
                 addDaysForMedicine(medsId, days)
 
-                val timesForAlarm = times.map { time ->
-                    TakingTime(
-                        medicineId = medsId.toInt(),
-                        time = time.time
-                    )
-                }
-
-                Alarm.scheduleAlarm(context, newMedicine, timesForAlarm)
+                // 4. Планируем будильник, используя ID
+                Alarm.scheduleAlarm(context, medicineWithId, timesWithIds)
 
                 _navigateAfterSave.emit(Unit)
             }
