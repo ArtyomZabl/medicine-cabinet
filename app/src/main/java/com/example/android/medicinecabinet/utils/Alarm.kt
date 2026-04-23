@@ -61,20 +61,24 @@ object Alarm {
 
         Log.d("AlarmDebugger", "Scheduling: $medicineName at ${calendar.time} (Code: ${getRequestCode(medicineId, time.id)})")
 
+        val alarmInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, pendingIntent)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setExactAndAllowWhileIdle(
+                alarmManager.setAlarmClock(alarmInfo, pendingIntent)
+                /*alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendar.timeInMillis,
                     pendingIntent
-                )
+                )*/
             }
         } else {
-            alarmManager.setExactAndAllowWhileIdle(
+            alarmManager.setAlarmClock(alarmInfo, pendingIntent)
+            /*alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 pendingIntent
-            )
+            )*/
         }
     }
 

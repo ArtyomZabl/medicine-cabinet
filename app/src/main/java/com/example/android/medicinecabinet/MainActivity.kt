@@ -83,7 +83,10 @@ class MainActivity : AppCompatActivity() {
             Constance.MEDICINE_CHANNEL_ID,
             "Напоминание о лекарствах",
             NotificationManager.IMPORTANCE_HIGH
-        )
+        ).apply {
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableVibration(true)
+        }
 
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
