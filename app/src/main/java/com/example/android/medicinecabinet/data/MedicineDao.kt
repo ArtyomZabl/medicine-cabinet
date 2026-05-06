@@ -33,4 +33,10 @@ interface MedicineDao {
 
     @Query("UPDATE medicines SET is_taken = :status WHERE medicineId = :id")
     suspend fun updateTakingStatus(id: Int, status: Boolean)
+
+    @Query("UPDATE medicines SET medicine_quantity = medicine_quantity + :quantity WHERE medicineId = :id")
+    suspend fun increaseQuantity(id: Int, quantity: Int)
+
+    @Query("UPDATE medicines SET medicine_quantity = medicine_quantity - :quantity WHERE medicineId = :id AND medicine_quantity >= :quantity")
+    suspend fun decreaseQuantity(id: Int, quantity: Int)
 }

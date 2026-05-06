@@ -158,6 +158,11 @@ fun DialogScreen(
                                             )
                                             homeScreenViewModel.insertNewData(newMedsLog)
                                         }
+                                        if (isTaken) {
+                                            homeScreenViewModel.increaseQuantity(medicine.medicineId, 1)
+                                        } else {
+                                            homeScreenViewModel.decreaseQuantity(medicine.medicineId, 1)
+                                        }
                                     }
                                 ) {
                                     Row(

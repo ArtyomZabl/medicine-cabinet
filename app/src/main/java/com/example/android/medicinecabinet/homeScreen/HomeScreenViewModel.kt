@@ -69,4 +69,16 @@ class HomeScreenViewModel(private val repository: MedicineRepository) : ViewMode
             repository.insert(medicineLog)
         }
     }
+
+    fun increaseQuantity(medicineId: Int, quantity: Int){
+        viewModelScope.launch {
+            repository.increaseQuantity(medicineId, quantity)
+        }
+    }
+
+    fun decreaseQuantity(medicineId: Int, quantity: Int){
+        viewModelScope.launch {
+            repository.decreaseQuantity(medicineId, quantity)
+        }
+    }
 }

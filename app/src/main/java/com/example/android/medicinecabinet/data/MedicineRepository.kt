@@ -39,6 +39,14 @@ class MedicineRepository(
         daoMeds.updateTakingStatus(id, status)
     }
 
+    suspend fun increaseQuantity(id: Int, quantity: Int) {
+        daoMeds.increaseQuantity(id, quantity)
+    }
+
+    suspend fun decreaseQuantity(id: Int, quantity: Int) {
+        daoMeds.decreaseQuantity(id, quantity)
+    }
+
 
     // REPOSITORY TAKING TIME
     private val _medicineId = MutableLiveData<Int>()
