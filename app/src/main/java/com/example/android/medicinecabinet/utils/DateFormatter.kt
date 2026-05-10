@@ -11,9 +11,9 @@ object DateFormatter {
         return date.format(formatter)
     }
 
-    fun full(date: LocalDate): String = format(date, "d MMMM yyyy 'г.'")
+    fun fullUi(date: LocalDate): String = format(date, "d MMMM yyyy 'г.'")
 
-    fun short(date: LocalDate): String = format(date, "d MMMM '(сегодня)'")
+    fun shortUi(date: LocalDate): String = format(date, "d MMMM '(сегодня)'")
 
     fun custom(date: LocalDate, pattern: String): String = format(date, pattern)
 

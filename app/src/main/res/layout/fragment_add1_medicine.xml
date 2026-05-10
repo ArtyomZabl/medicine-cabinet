@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.example.android.medicinecabinet.utils.DateFormatter" />
+
         <variable
             name="addMedicineViewModel"
             type="com.example.android.medicinecabinet.addMedicine.AddMedicineViewModel" />
@@ -99,8 +101,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Quantity"
-                        android:text="@={addMedicineViewModel.textQuantity}"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:text="@={addMedicineViewModel.textQuantity}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -111,7 +113,7 @@
                     android:hint="Expiration date"
                     android:inputType="date"
                     android:onClick="@{() -> addMedicineViewModel.onOpenCalendarClicked()}"
-                    android:text="@{addMedicineViewModel.selectedDate}"
+                    app:formattedDate="@{addMedicineViewModel.selectedDate}"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayoutQuantity"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayoutQuantity"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayoutQuantity" />
@@ -123,14 +125,14 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_marginHorizontal="32dp"
             android:layout_marginBottom="16dp"
             android:enabled="@{addMedicineViewModel.isNameNextEnabled()}"
             android:onClick="@{() -> addMedicineViewModel.navNextToDosage()}"
             android:text="Далее"
             android:textSize="@dimen/text_btn_medium"
-            android:textStyle="bold"
-            android:layout_gravity="bottom"/>
+            android:textStyle="bold" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

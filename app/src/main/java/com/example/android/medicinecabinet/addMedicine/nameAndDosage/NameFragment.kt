@@ -35,6 +35,7 @@ import com.example.android.medicinecabinet.databinding.FragmentAdd1MedicineBindi
 import com.example.android.medicinecabinet.utils.Functions.setMarginBottom
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Locale
 
 class NameFragment : Fragment() {
 
@@ -57,7 +58,7 @@ class NameFragment : Fragment() {
 
         binding.addMedicineViewModel = addMedicineViewModel
         binding.lifecycleOwner = this
-        binding.textExpiration.text = ""
+        //binding.textExpiration.text = ""
 
         if (binding.medsImage.drawable == null) {
             binding.medsImage.visibility = View.GONE
@@ -70,7 +71,7 @@ class NameFragment : Fragment() {
                 addMedicineViewModel.apply {
                     //textName.value = binding.textName.text.toString().trim()
                     //textQuantity.value = binding.textQuantity.text.toString()
-                    textExpiration.value = binding.textExpiration.text.toString().trim()
+                    //textExpiration.value = binding.textExpiration.text.toString().trim()
 
                     if(product.value?.name != textName.value) changeProductName(textName.value)
                 }
@@ -111,7 +112,7 @@ class NameFragment : Fragment() {
                     val datePicker = DatePickerDialog(
                         requireContext(),
                         { _, year, month, dayOfMonth ->
-                            val date = DateFormatter.numericToLong("$dayOfMonth.${month + 1}.$year")
+                            val date = String.format(Locale("ru"), "%04d-%02d-%02d", year, month + 1, dayOfMonth)
                             addMedicineViewModel.setSelectedDate(date)
                         },
                         calendar.get(Calendar.YEAR),

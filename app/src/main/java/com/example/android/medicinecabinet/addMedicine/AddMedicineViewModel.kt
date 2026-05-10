@@ -21,7 +21,7 @@ import com.example.android.medicinecabinet.data.productInfo.ProductInfo
 import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakingDays
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeUi
-import com.example.android.medicinecabinet.utils.Alarm
+import com.example.android.medicinecabinet.notifications.Alarm
 import com.example.android.medicinecabinet.utils.DateFormatter
 import com.example.android.medicinecabinet.utils.ProductUiState
 import kotlinx.coroutines.Dispatchers
@@ -173,8 +173,6 @@ class AddMedicineViewModel(
     val textQuantity = MutableLiveData<String?>()
     val textDosage = MutableLiveData<String?>()
     val selectedUnit = MutableLiveData<String?>()
-    val textExpiration = MutableLiveData<String?>()
-
 
     private var _openDatePicker = MutableSharedFlow<Unit>()
     val openDatePicker = _openDatePicker.asSharedFlow()
@@ -417,7 +415,7 @@ class AddMedicineViewModel(
 
     fun setTodayDate(): String? {
         val todayDate = LocalDate.now()
-        val pattern = DateFormatter.full(todayDate)
+        val pattern = DateFormatter.fullUi(todayDate)
 
         val formatter = DateTimeFormatter.ofPattern(pattern, Locale("ru"))
         _today.value = todayDate.format(formatter)
@@ -484,7 +482,7 @@ class AddMedicineViewModel(
                     .name(textName.value ?: "NULL")
                     .image(_imagePath.value)
                     .quantity(textQuantity.value?.toInt())
-                    .expirationDate(textExpiration.value)
+                    .expirationDate(_selectedDate.value)
                     .dosage(textDosage.value?.toFloat())
                     .unit(selectedUnit.value)
                     .startTakingDate(_selectedStartTakingDate.value)
@@ -510,7 +508,14 @@ class AddMedicineViewModel(
 
                 // 4. Планируем будильник, используя ID
                 Alarm.scheduleAlarm(context, medicineWithId, timesWithIds)
-
+                if (medicineWithId.expirationDate != null) {
+                    Alarm.expAlarm(
+                        context,
+                        medicineWithId.medicineId,
+                        medicineWithId.name,
+                        medicineWithId.expirationDate
+                    )
+                }
                 _navigateAfterSave.emit(Unit)
             }
         }
@@ -546,7 +551,7 @@ class AddMedicineViewModel(
         // Сброс полей с первого экрана (Название и количество)
         textName.value = "" // или null, если допускается
         textQuantity.value = null
-        textExpiration.value = null
+        _selectedDate.value = null
         _selectedDate.value = null
 
         // Сброс полей со второго экрана (Дозировка)

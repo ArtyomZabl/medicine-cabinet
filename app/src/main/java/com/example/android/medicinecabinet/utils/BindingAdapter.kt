@@ -4,9 +4,11 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
+import java.time.LocalDate
 
 // Устанавливаем выбранное значение в AutoCompleteTextView
 @BindingAdapter("selectedValue")
@@ -30,8 +32,22 @@ fun setSelectedValueListener(view: AutoCompleteTextView, listener: InverseBindin
         view.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             listener.onChange()
         }
-        view.onFocusChangeListener = View.OnFocusChangeListener {_, hasFocus ->
+        view.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) listener.onChange()
         }
+    }
+}
+
+@BindingAdapter("formattedDate")
+fun setFormattedDate(view: TextView, rawDate: String?) {
+    if (rawDate.isNullOrEmpty()) {
+        view.text = ""
+        return
+    }
+
+    view.text = try {
+        DateFormatter.fullUi(LocalDate.parse(rawDate))
+    } catch (e: Exception) {
+        rawDate
     }
 }
