@@ -1,9 +1,16 @@
 package com.example.android.medicinecabinet.utils
 
+import android.icu.util.Calendar
 import java.time.DayOfWeek
 
-enum class WeekDay() {
-    MON, TUE, WED, THU, FRI, SAT, SUN;
+enum class WeekDay(val calendarValue: Int) {
+    MON(Calendar.MONDAY),
+    TUE(Calendar.TUESDAY),
+    WED(Calendar.WEDNESDAY),
+    THU(Calendar.THURSDAY),
+    FRI(Calendar.FRIDAY),
+    SAT(Calendar.SATURDAY),
+    SUN(Calendar.SUNDAY);
 
     companion object {
         fun from(dayOfWeek: DayOfWeek): WeekDay {
@@ -17,5 +24,12 @@ enum class WeekDay() {
                 DayOfWeek.SUNDAY -> SUN
             }
         }
+
+        fun fromCalendar(calendarInt: Int): WeekDay{
+            return entries.find { it.calendarValue == calendarInt } ?: throw IllegalArgumentException("Invalid calendar value: $calendarInt")
+        }
+
     }
+
+
 }

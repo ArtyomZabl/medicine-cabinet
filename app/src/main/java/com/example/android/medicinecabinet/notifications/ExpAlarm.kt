@@ -1,4 +1,4 @@
-package com.example.android.medicinecabinet.utils
+package com.example.android.medicinecabinet.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -8,10 +8,11 @@ import android.os.Build
 import android.util.Log
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
+import com.example.android.medicinecabinet.utils.Constance
+import com.example.android.medicinecabinet.notifications.ReminderReceiver
 import java.util.Calendar
 
-object Alarm {
-
+object ExpAlarm {
     private fun getRequestCode(medicineId: Int, timeId: Int): Int {
         return "$medicineId-$timeId".hashCode()
     }
@@ -66,19 +67,9 @@ object Alarm {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setAlarmClock(alarmInfo, pendingIntent)
-                /*alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    pendingIntent
-                )*/
             }
         } else {
             alarmManager.setAlarmClock(alarmInfo, pendingIntent)
-            /*alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )*/
         }
     }
 

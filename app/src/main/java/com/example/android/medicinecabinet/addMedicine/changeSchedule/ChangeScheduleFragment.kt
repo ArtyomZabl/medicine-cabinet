@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -97,7 +96,7 @@ class ChangeScheduleFragment : Fragment() {
                         DateType.START -> showDatePicker(dateType)
                         DateType.END -> {
                             if (addMedicineViewModel.selectedEndTakingDate.value == null) {
-                                val date = DateFormatter.full(LocalDate.now().plusMonths(1))
+                                val date = DateFormatter.fullUi(LocalDate.now().plusMonths(1))
                                 addMedicineViewModel.setSelectedEndTakingDate(date)
                             } else showDatePicker(dateType)
                         }

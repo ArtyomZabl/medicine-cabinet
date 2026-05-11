@@ -238,7 +238,7 @@ class AddMedicineViewModel(
         _selectedIntakeInterval.value = intakeInterval[position]
     }
 
-    private val _daysInterval = MutableLiveData<Int?>(2)
+    private val _daysInterval = MutableLiveData<Int?>(1)
     val daysInterval: LiveData<Int?> get() = _daysInterval
 
     fun setDaysInterval(days: Int?) {
@@ -507,7 +507,7 @@ class AddMedicineViewModel(
                 addDaysForMedicine(medsId, days)
 
                 // 4. Планируем будильник, используя ID
-                Alarm.scheduleAlarm(context, medicineWithId, timesWithIds)
+                Alarm.scheduleAlarm(context, medicineWithId, timesWithIds, daysInterval.value, selectedDays.value)
                 if (medicineWithId.expirationDate != null) {
                     Alarm.expAlarm(
                         context,

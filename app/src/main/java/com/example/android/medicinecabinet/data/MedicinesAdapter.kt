@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.internal.illegalDecoyCallException
+import androidx.compose.ui.text.font.Typeface
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,12 +15,14 @@ import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.utils.Constance
 import com.example.android.medicinecabinet.databinding.MedicineItemBinding
 import com.example.android.medicinecabinet.databinding.TakingMedicineItemBinding
+import com.example.android.medicinecabinet.utils.DateFormatter
 import com.example.android.medicinecabinet.utils.Functions.setMarginTop
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.time.LocalDate
 
 
 class MedicinesAdapter(private val clickListener: MedicineListener) :
@@ -107,9 +110,27 @@ class MedicinesAdapter(private val clickListener: MedicineListener) :
                 textExpiration.setMarginTop(0)
                 textExpiration.visibility = View.GONE
             } else {
+                val todayDate = LocalDate.now()
+                val expirationDate = LocalDate.parse(medicine.expirationDate)
+
                 textExpiration.setMarginTop(8)
                 textExpiration.visibility = View.VISIBLE
-                textExpiration.text = medicine.expirationDate
+                textExpiration.text = DateFormatter.fullUi(expirationDate)
+
+                when {
+                    expirationDate.isBefore(todayDate) -> {
+                        textExpiration.setTextColor(textExpiration.context.getColor(R.color.red))
+                        textExpiration.setTypeface(null, android.graphics.Typeface.BOLD)
+                    }
+                    expirationDate.isBefore(todayDate.plusDays(7)) -> {
+                        textExpiration.setTextColor(textExpiration.context.getColor(R.color.orange))
+                        textExpiration.setTypeface(null, android.graphics.Typeface.NORMAL)
+                    }
+                    else -> {
+                        textExpiration.setTextColor(textExpiration.context.getColor(R.color.black))
+                        textExpiration.setTypeface(null, android.graphics.Typeface.NORMAL)
+                    }
+                }
             }
 
             binding.medicine = medicine

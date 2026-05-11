@@ -11,7 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.utils.Constance
-import com.example.android.medicinecabinet.utils.ReminderReceiver
+import com.example.android.medicinecabinet.notifications.ReminderReceiver
 
 object AlarmDebugger {
     private const val TAG = "AlarmDebugger"

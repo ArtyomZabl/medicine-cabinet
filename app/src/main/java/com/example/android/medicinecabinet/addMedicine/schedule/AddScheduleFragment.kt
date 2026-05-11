@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -175,9 +174,10 @@ class AddScheduleFragment : Fragment() {
                     binding.layoutWeekDays.visibility = View.GONE
                     binding.tvTakingTime.setMarginTop(0)
 
-                    addMedicineViewModel.setSelectedStartTakingDate(DateFormatter.full(LocalDate.now()))
+                    addMedicineViewModel.setSelectedStartTakingDate(DateFormatter.fullUi(LocalDate.now()))
                     binding.tvDateStart.text = addMedicineViewModel.selectedStartTakingDate.value
                     setupEndTakingDate()
+                    addMedicineViewModel.setDaysInterval(1)
                     binding.constraintLayoutTime.visibility = View.VISIBLE
 
                     binding.constraintLayoutDuration.visibility = View.VISIBLE
@@ -191,7 +191,7 @@ class AddScheduleFragment : Fragment() {
                     binding.tvTakingTime.setMarginTop(8)
                     binding.layoutWeekDays.visibility = View.VISIBLE
 
-                    addMedicineViewModel.setSelectedStartTakingDate(DateFormatter.full(LocalDate.now()))
+                    addMedicineViewModel.setSelectedStartTakingDate(DateFormatter.fullUi(LocalDate.now()))
                     binding.tvDateStart.text = addMedicineViewModel.selectedStartTakingDate.value
                     setupEndTakingDate()
                     binding.constraintLayoutTime.visibility = View.VISIBLE
@@ -208,7 +208,7 @@ class AddScheduleFragment : Fragment() {
 
                     binding.constraintLayoutTime.visibility = View.VISIBLE
 
-                    addMedicineViewModel.setSelectedStartTakingDate(DateFormatter.full(LocalDate.now()))
+                    addMedicineViewModel.setSelectedStartTakingDate(DateFormatter.fullUi(LocalDate.now()))
                     binding.tvDateStart.text = addMedicineViewModel.selectedStartTakingDate.value
                     setupEndTakingDate()
 

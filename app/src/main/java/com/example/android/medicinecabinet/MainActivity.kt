@@ -9,9 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.SessionConfig
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -27,7 +25,6 @@ import com.example.android.medicinecabinet.addMedicine.AddMedicineViewModelFacto
 import com.example.android.medicinecabinet.data.MedicineDatabase
 import com.example.android.medicinecabinet.data.MedicineRepository
 import com.example.android.medicinecabinet.databinding.ActivityMainBinding
-import com.example.android.medicinecabinet.databinding.FragmentCameraBinding
 import com.example.android.medicinecabinet.utils.Constance
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -46,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        createNotificationChannel(this)
+        createRemNotChannel(this)
+        createExpNotChannel(this)
         checkNotificationPermission()
 
         val daoMeds = MedicineDatabase.getDatabase(this).medicineDao()
@@ -78,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun createNotificationChannel(context: Context) {
+    fun createRemNotChannel(context: Context) {
         val channel = NotificationChannel(
             Constance.MEDICINE_CHANNEL_ID,
             "Напоминание о лекарствах",
@@ -92,6 +90,21 @@ class MainActivity : AppCompatActivity() {
 
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
+    }
+
+    fun createExpNotChannel(context: Context) {
+        val channel = NotificationChannel(
+            Constance.EXPIRATION_CHANNEL_ID,
+            "Просроченные лекарства",
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            enableVibration(true)
+        }
+
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
+
     }
 
     private fun checkNotificationPermission() {
