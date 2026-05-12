@@ -7,6 +7,6 @@
     //Text
     <dimen name="text_title_large">24sp</dimen>
     <dimen name="text_title_medium">20sp</dimen>
-    <dimen name="text_title_small">20sp</dimen>
+    <dimen name="text_title_small">16sp</dimen>
     <dimen name="text_body">12sp</dimen>
 </resources>

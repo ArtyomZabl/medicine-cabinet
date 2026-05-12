@@ -24,11 +24,13 @@ import com.example.android.medicinecabinet.data.takingTime.TakingTimeAdapter
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeUi
 import com.example.android.medicinecabinet.databinding.FragmentDetailBinding
 import com.example.android.medicinecabinet.utils.Constance
+import com.example.android.medicinecabinet.utils.DateFormatter
 import com.example.android.medicinecabinet.utils.DeleteDialogFragment
 import com.example.android.medicinecabinet.utils.Functions.setMarginTop
 import com.example.android.medicinecabinet.utils.WeekDay
 import kotlinx.coroutines.launch
 import java.io.File
+import java.time.LocalDate
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
@@ -84,6 +86,44 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     medImage.visibility = View.VISIBLE
 
                 } else medImage.visibility = View.GONE
+
+                if(medicine.expirationDate.isNullOrBlank()) {
+                    divider?.visibility = View.GONE
+                    divider?.setMarginTop(0)
+
+                    expiration?.visibility = View.GONE
+
+                    textExpiration?.visibility = View.GONE
+                    textExpiration?.setMarginTop(0)
+                } else {
+                    val todayDate = LocalDate.now()
+                    val expDate = LocalDate.parse(medicine.expirationDate)
+
+                    textExpiration?.text = DateFormatter.fullUi(expDate)
+
+                    when {
+                        expDate.isBefore(todayDate) -> {
+                            textExpiration?.setTextColor(textExpiration.context.getColor(R.color.red))
+                            textExpiration?.setTypeface(null, android.graphics.Typeface.BOLD)
+                        }
+                        expDate.isBefore(todayDate.plusDays(7)) -> {
+                            textExpiration?.setTextColor(textExpiration.context.getColor(R.color.orange))
+                            textExpiration?.setTypeface(null, android.graphics.Typeface.NORMAL)
+                        }
+                        else -> {
+                            textExpiration?.setTextColor(textExpiration.context.getColor(R.color.black))
+                            textExpiration?.setTypeface(null, android.graphics.Typeface.NORMAL)
+                        }
+                    }
+
+                    divider?.visibility = View.VISIBLE
+                    divider?.setMarginTop(8)
+
+                    expiration?.visibility = View.VISIBLE
+                    expiration?.setMarginTop(8)
+
+                    textExpiration?.visibility = View.VISIBLE
+                }
 
 
                 if (medicine.startTakingDate != null) {
@@ -142,10 +182,19 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
 
         detailViewModel.getSelectedDaysForMedicine().observe(viewLifecycleOwner) { days ->
-            if (days.isNullOrEmpty()) {
+            if (days.isNullOrEmpty() && detailViewModel.medicine.value?.intakeIntervalDays == null) {
+                binding.constraintLayoutSchedule.visibility = View.GONE
+                binding.constraintLayoutSchedule.setMarginTop(0)
+            } else if (days.isNullOrEmpty()) {
+                binding.constraintLayoutSchedule.visibility = View.VISIBLE
+                binding.constraintLayoutSchedule.setMarginTop(16)
+
                 binding.layoutWeekDays.visibility = View.GONE
                 binding.layoutWeekDays.setMarginTop(0)
             } else {
+                binding.constraintLayoutSchedule.visibility = View.VISIBLE
+                binding.constraintLayoutSchedule.setMarginTop(16)
+
                 val map = mapOf(
                     WeekDay.MON to binding.dayMon,
                     WeekDay.TUE to binding.dayTue,
