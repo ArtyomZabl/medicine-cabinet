@@ -59,7 +59,60 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/paracetamol" />
 
-                    android:ellipsize="end"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/name_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/cv_background_light"
+                    app:cardElevation="0dp"
+                    app:cardCornerRadius="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/med_image">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingVertical="4dp"
+                        android:paddingHorizontal="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Название"
+                            android:textColor="@color/grey"
+                            android:textSize="@dimen/text_title_small"
+                            android:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/med_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="лекарство"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_title_medium"
+                            android:visibility="visible" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@android:color/darker_gray" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Количество"
+                            android:textColor="@color/grey"
+                            android:textSize="@dimen/text_title_small" />
 
                         <TextView
                             android:id="@+id/med_quantity"
