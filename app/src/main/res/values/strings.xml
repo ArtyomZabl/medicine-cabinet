@@ -7,4 +7,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="delete">Delete</string>
 
+
+    <string name="interval_as_needed">По мере необходимости</string>
+    <string name="interval_every_day">Каждый день</string>
+    <string name="interval_specific_days">В определённые дни</string>
+    <string name="interval_every_x_days">Раз в несколько дней</string>
+
 </resources>

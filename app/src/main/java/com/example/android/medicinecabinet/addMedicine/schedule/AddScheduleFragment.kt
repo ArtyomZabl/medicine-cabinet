@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -25,6 +26,7 @@ import com.example.android.medicinecabinet.utils.Constance
 import com.example.android.medicinecabinet.utils.DateFormatter
 import com.example.android.medicinecabinet.utils.Functions.setMarginStart
 import com.example.android.medicinecabinet.utils.Functions.setMarginTop
+import com.example.android.medicinecabinet.utils.IntakeInterval
 import com.example.android.medicinecabinet.utils.TimeFormatter
 import com.example.android.medicinecabinet.utils.WeekDay
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -134,10 +136,11 @@ class AddScheduleFragment : Fragment() {
         binding.rcViewTakingTime.adapter = adapter
         binding.rcViewTakingTime.layoutManager = LinearLayoutManager(context)
 
+        val displayStrings = addMedicineViewModel.intakeInterval.map { getString(it.stringRes) }
         val arrayAdapter = ArrayAdapter(
             requireContext(),
             R.layout.list_item_dropdown,
-            addMedicineViewModel.intakeInterval
+            displayStrings
         )
         binding.autoCompleteIntakeInterval.setAdapter(arrayAdapter)
 
@@ -148,17 +151,20 @@ class AddScheduleFragment : Fragment() {
         )
         binding.autoCompleteDaysInterval.setAdapter(arrayAdapter1)
 
-        if (addMedicineViewModel.takingTimes.value.isNullOrEmpty()){
+        if (addMedicineViewModel.takingTimes.value.isNullOrEmpty()) {
             addMedicineViewModel.addTakingTime(TimeFormatter.short(LocalDateTime.now()))
         }
 
         addMedicineViewModel.selectedIntakeInterval.observe(viewLifecycleOwner) { selected ->
-            if (selected != null && binding.autoCompleteIntakeInterval.text.toString() != selected) {
-                binding.autoCompleteIntakeInterval.setText(selected, false)
+            if (selected != null && binding.autoCompleteIntakeInterval.text.toString() != selected.toString()) {
+                val displayString = addMedicineViewModel.selectedIntakeInterval.map { getString(it.stringRes) }.value
+                binding.autoCompleteIntakeInterval.setText(
+                    displayString, false
+                )
             }
 
             when (selected) {
-                "По мере необходимости" -> {
+                IntakeInterval.AS_NEEDED -> {
                     binding.textInputDaysInterval.visibility = View.GONE
                     binding.autoCompleteDaysInterval.setMarginTop(0)
 
@@ -167,7 +173,7 @@ class AddScheduleFragment : Fragment() {
                     binding.constraintLayoutDuration.visibility = View.GONE
                 }
 
-                "Каждый день" -> {
+                IntakeInterval.EVERY_DAY -> {
                     binding.textInputDaysInterval.visibility = View.GONE
                     binding.textInputDaysInterval.setMarginTop(0)
 
@@ -183,7 +189,7 @@ class AddScheduleFragment : Fragment() {
                     binding.constraintLayoutDuration.visibility = View.VISIBLE
                 }
 
-                "В определённые дни" -> {
+                IntakeInterval.SPECIFIC_DAYS -> {
                     binding.textInputDaysInterval.visibility = View.GONE
                     binding.textInputDaysInterval.setMarginTop(0)
 
@@ -199,7 +205,7 @@ class AddScheduleFragment : Fragment() {
                     binding.constraintLayoutDuration.visibility = View.VISIBLE
                 }
 
-                "Раз в несколько дней" -> {
+                IntakeInterval.EVERY_X_DAYS -> {
                     binding.textInputDaysInterval.visibility = View.VISIBLE
                     binding.textInputDaysInterval.setMarginTop(8)
 
@@ -234,8 +240,10 @@ class AddScheduleFragment : Fragment() {
             binding.btnNext.isEnabled = isEnabled
         }
 
+
         binding.autoCompleteIntakeInterval.setOnItemClickListener { _, _, position, _ ->
-            addMedicineViewModel.setSelectedInterval(position)
+            val selectedEnum = addMedicineViewModel.intakeInterval[position]
+            addMedicineViewModel.setSelectedInterval(selectedEnum)
         }
 
         binding.autoCompleteDaysInterval.setOnItemClickListener { _, _, position, _ ->
@@ -309,10 +317,11 @@ class AddScheduleFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val displayStrings = addMedicineViewModel.intakeInterval.map { getString(it.stringRes) }
         val arrayAdapter = ArrayAdapter(
             requireContext(),
             R.layout.list_item_dropdown,
-            addMedicineViewModel.intakeInterval
+            displayStrings
         )
         binding.autoCompleteIntakeInterval.setAdapter(arrayAdapter)
 

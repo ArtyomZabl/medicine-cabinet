@@ -3,6 +3,8 @@ package com.example.android.medicinecabinet.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.android.medicinecabinet.R
+import com.example.android.medicinecabinet.utils.IntakeInterval
 
 @Entity(tableName = "medicines")
 data class Medicine(
@@ -23,6 +25,9 @@ data class Medicine(
 
     @ColumnInfo(name = "unit")
     val unit: String? = null,
+
+    @ColumnInfo(name = "intake_interval")
+    val intakeInterval: IntakeInterval = IntakeInterval.AS_NEEDED,
 
     @ColumnInfo(name = "expiration_date")
     val expirationDate: String?,
@@ -52,6 +57,7 @@ data class Medicine(
         private var expirationDate: String? = null
         private var dosage: Float? = null
         private var unit: String? = null
+        private var intakeInterval: IntakeInterval = IntakeInterval.AS_NEEDED
         private var startTakingDate: String? = null
         private var endTakingDate: String? = null
         private var intakeIntervalDays: Int? = null
@@ -65,6 +71,7 @@ data class Medicine(
         fun expirationDate(expirationDate: String?) = apply { this.expirationDate = expirationDate }
         fun dosage(dosage: Float?) = apply { this.dosage = dosage }
         fun unit(unit: String?) = apply { this.unit = unit }
+        fun intakeInterval(intakeInterval: IntakeInterval) = apply { this.intakeInterval = intakeInterval }
         fun startTakingDate(startTakingDate: String?) = apply { this.startTakingDate = startTakingDate }
         fun endTakingDate(endTakingDate: String?) = apply { this.endTakingDate = endTakingDate }
         fun intakeIntervalDays(intakeIntervalDays: Int?) = apply { this.intakeIntervalDays = intakeIntervalDays }
@@ -78,6 +85,7 @@ data class Medicine(
             expirationDate = expirationDate,
             dosage = dosage,
             unit = unit,
+            intakeInterval = intakeInterval,
             startTakingDate = startTakingDate,
             endTakingDate = endTakingDate,
             intakeIntervalDays = intakeIntervalDays,

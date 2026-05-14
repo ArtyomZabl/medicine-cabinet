@@ -27,6 +27,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.navGraphViewModels
 import coil.load
 import com.example.android.medicinecabinet.utils.Functions.setMarginStart
+import com.example.android.medicinecabinet.utils.IntakeInterval
 import com.example.android.medicinecabinet.utils.WeekDay
 import java.io.File
 
@@ -57,12 +58,12 @@ class ResultFragment : Fragment() {
 
 
         when (addMedicineViewModel.selectedIntakeInterval.value) {
-            "По мере необходимости" -> {
+            IntakeInterval.AS_NEEDED -> {
                 binding.constraintLayoutDuration.visibility = View.GONE
                 binding.constraintLayoutSchedule.visibility = View.GONE
             }
 
-            "Каждый день" -> {
+            IntakeInterval.EVERY_DAY -> {
                 binding.constraintLayoutSchedule.visibility = View.VISIBLE
                 binding.constraintLayoutSchedule.setMarginTop(16)
 
@@ -80,7 +81,7 @@ class ResultFragment : Fragment() {
                 binding.constraintLayoutDuration.visibility = View.VISIBLE
             }
 
-            "В определённые дни" -> {
+            IntakeInterval.SPECIFIC_DAYS -> {
                 binding.constraintLayoutSchedule.visibility = View.VISIBLE
 
                 binding.layoutWeekDays.visibility = View.VISIBLE
@@ -97,7 +98,7 @@ class ResultFragment : Fragment() {
                 binding.constraintLayoutDuration.visibility = View.VISIBLE
             }
 
-            "Раз в несколько дней" -> {
+            IntakeInterval.EVERY_X_DAYS -> {
                 binding.constraintLayoutSchedule.visibility = View.VISIBLE
 
                 binding.layoutWeekDays.visibility = View.GONE

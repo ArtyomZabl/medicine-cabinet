@@ -19,6 +19,12 @@ fun setSelectedValue(view: AutoCompleteTextView, value: String?) {
     }
 }
 
+@BindingAdapter("selectedValueSchedule")
+fun setSelectedValueSchedule(view: AutoCompleteTextView, interval: IntakeInterval) {
+    val stringValue = view.context.getString(interval.stringRes)
+    view.setText(stringValue, false)
+}
+
 // Извлекаем выбранное значение (для @={})
 @InverseBindingAdapter(attribute = "selectedValue", event = "selectedValueAttrChanged")
 fun getSelectedValue(view: AutoCompleteTextView): String {

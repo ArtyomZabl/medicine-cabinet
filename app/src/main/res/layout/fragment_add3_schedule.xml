@@ -91,7 +91,7 @@
                                 android:backgroundTint="@android:color/holo_green_light"
                                 android:inputType="none"
                                 style="@style/EdTextStyle"
-                                app:selectedValue="@{addMedicineViewModel.selectedIntakeInterval}" />
+                                app:selectedValueSchedule="@{addMedicineViewModel.selectedIntakeInterval}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout

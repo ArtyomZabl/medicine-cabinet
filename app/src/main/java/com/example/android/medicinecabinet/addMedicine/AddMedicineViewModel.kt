@@ -23,6 +23,7 @@ import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.data.takingTime.TakingTimeUi
 import com.example.android.medicinecabinet.notifications.Alarm
 import com.example.android.medicinecabinet.utils.DateFormatter
+import com.example.android.medicinecabinet.utils.IntakeInterval
 import com.example.android.medicinecabinet.utils.ProductUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -123,8 +124,6 @@ class AddMedicineViewModel(
 
             try {
                 _product.value = fetchProductInfo(barcode)
-
-
                 if (_product.value != null) {
                     _uiStateCamera.value = ProductUiState.Success(_product.value!!)
                 } else {
@@ -228,14 +227,13 @@ class AddMedicineViewModel(
 
     // VIEW MODEL FRAGMENT ADD 3 SCHEDULE
 
-    val intakeInterval =
-        listOf("По мере необходимости", "Каждый день", "В определённые дни", "Раз в несколько дней")
+    val intakeInterval = IntakeInterval.entries
 
-    private var _selectedIntakeInterval = MutableLiveData<String>("По мере необходимости")
-    val selectedIntakeInterval: LiveData<String> get() = _selectedIntakeInterval
+    private var _selectedIntakeInterval = MutableLiveData(IntakeInterval.AS_NEEDED)
+    val selectedIntakeInterval: LiveData<IntakeInterval> get() = _selectedIntakeInterval
 
-    fun setSelectedInterval(position: Int) {
-        _selectedIntakeInterval.value = intakeInterval[position]
+    fun setSelectedInterval(interval: IntakeInterval) {
+        _selectedIntakeInterval.value = interval
     }
 
     private val _daysInterval = MutableLiveData<Int?>(1)
@@ -374,7 +372,7 @@ class AddMedicineViewModel(
             val times = takingTimes.value.orEmpty()
             val interval = selectedIntakeInterval.value
 
-            value = if (interval == "По мере необходимости") {
+            value = if (interval == IntakeInterval.AS_NEEDED) {
                 true
             } else {
                 times.isNotEmpty()
@@ -485,6 +483,7 @@ class AddMedicineViewModel(
                     .expirationDate(_selectedDate.value)
                     .dosage(textDosage.value?.toFloat())
                     .unit(selectedUnit.value)
+                    .intakeInterval(selectedIntakeInterval.value ?: IntakeInterval.AS_NEEDED)
                     .startTakingDate(_selectedStartTakingDate.value)
                     .endTakingDate(_selectedEndTakingDate.value)
                     .intakeIntervalDays(daysInterval.value)
@@ -523,7 +522,7 @@ class AddMedicineViewModel(
 
     fun prepareDataBasedOnInterval() {
         when (selectedIntakeInterval.value) {
-            "По мере необходимости" -> {
+            IntakeInterval.AS_NEEDED -> {
                 setSelectedStartTakingDate(null)
                 setSelectedEndTakingDate(null)
                 clearTakingTimes()
@@ -531,13 +530,13 @@ class AddMedicineViewModel(
                 setDaysInterval(null)
             }
 
-            "Каждый день" -> {
+            IntakeInterval.EVERY_DAY -> {
                 clearSelectedDays()
                 setDaysInterval(null)
             }
 
-            "В определённые дни" -> setDaysInterval(null)
-            "Раз в несколько дней" -> clearSelectedDays()
+            IntakeInterval.SPECIFIC_DAYS -> setDaysInterval(null)
+            IntakeInterval.EVERY_X_DAYS -> clearSelectedDays()
         }
     }
 
