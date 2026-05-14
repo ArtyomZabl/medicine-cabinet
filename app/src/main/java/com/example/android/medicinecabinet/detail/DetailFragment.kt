@@ -1,10 +1,17 @@
 package com.example.android.medicinecabinet.detail
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -87,42 +94,44 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
                 } else medImage.visibility = View.GONE
 
-                if(medicine.expirationDate.isNullOrBlank()) {
-                    divider?.visibility = View.GONE
-                    divider?.setMarginTop(0)
+                if (medicine.expirationDate.isNullOrBlank()) {
+                    divider.visibility = View.GONE
+                    divider.setMarginTop(0)
 
-                    expiration?.visibility = View.GONE
+                    expiration.visibility = View.GONE
 
-                    textExpiration?.visibility = View.GONE
-                    textExpiration?.setMarginTop(0)
+                    textExpiration.visibility = View.GONE
+                    textExpiration.setMarginTop(0)
                 } else {
                     val todayDate = LocalDate.now()
                     val expDate = LocalDate.parse(medicine.expirationDate)
 
-                    textExpiration?.text = DateFormatter.fullUi(expDate)
+                    textExpiration.text = DateFormatter.fullUi(expDate)
 
                     when {
                         expDate.isBefore(todayDate) -> {
-                            textExpiration?.setTextColor(textExpiration.context.getColor(R.color.red))
-                            textExpiration?.setTypeface(null, android.graphics.Typeface.BOLD)
+                            textExpiration.setTextColor(textExpiration.context.getColor(R.color.red))
+                            textExpiration.setTypeface(null, android.graphics.Typeface.BOLD)
                         }
+
                         expDate.isBefore(todayDate.plusDays(7)) -> {
-                            textExpiration?.setTextColor(textExpiration.context.getColor(R.color.orange))
-                            textExpiration?.setTypeface(null, android.graphics.Typeface.NORMAL)
+                            textExpiration.setTextColor(textExpiration.context.getColor(R.color.orange))
+                            textExpiration.setTypeface(null, android.graphics.Typeface.NORMAL)
                         }
+
                         else -> {
-                            textExpiration?.setTextColor(textExpiration.context.getColor(R.color.black))
-                            textExpiration?.setTypeface(null, android.graphics.Typeface.NORMAL)
+                            textExpiration.setTextColor(textExpiration.context.getColor(R.color.black))
+                            textExpiration.setTypeface(null, android.graphics.Typeface.NORMAL)
                         }
                     }
 
-                    divider?.visibility = View.VISIBLE
-                    divider?.setMarginTop(8)
+                    divider.visibility = View.VISIBLE
+                    divider.setMarginTop(8)
 
-                    expiration?.visibility = View.VISIBLE
-                    expiration?.setMarginTop(8)
+                    expiration.visibility = View.VISIBLE
+                    expiration.setMarginTop(8)
 
-                    textExpiration?.visibility = View.VISIBLE
+                    textExpiration.visibility = View.VISIBLE
                 }
 
 
@@ -227,6 +236,49 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     }.show(parentFragmentManager, "deleteDialog")
                 }
             }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                detailViewModel.navigateToEdit.collect {
+                    val action = DetailFragmentDirections.actionDetailFragment2ToEditDetailFragment(medicineId)
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
+        binding.toolbar.inflateMenu(R.menu.detail_menu)
+
+        val deleteItem = binding.toolbar.menu.findItem(R.id.action_delete)
+        val spannable = SpannableString(deleteItem.title).apply {
+            setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.red)),
+                0,
+                length,
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        deleteItem.title = spannable
+
+
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_edit -> {
+                    detailViewModel.onNavigateToEdit()
+                    true
+                }
+
+                R.id.action_delete -> {
+                    detailViewModel.onDeleteClicked()
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            detailViewModel.onNavigateBack()
         }
     }
 

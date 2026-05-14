@@ -55,6 +55,9 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.6.7")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.7")
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.fragment.ktx)
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")
     implementation("androidx.compose.material:material-icons-extended:1.6.7")
 

@@ -43,6 +43,9 @@
         <argument
             android:name="medicineId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_detailFragment2_to_editDetailFragment"
+            app:destination="@id/editDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/dosageFragment"
@@ -91,5 +94,16 @@
             app:destination="@id/nameFragment2"
             app:popUpTo="@id/cameraFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/editDetailFragment"
+        android:name="com.example.android.medicinecabinet.detail.editDetail.EditDetailFragment"
+        android:label="EditDetailFragment" >
+        <argument
+            android:name="medicineId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_editDetailFragment_to_detailFragment2"
+            app:destination="@id/detailFragment2" />
     </fragment>
 </navigation>

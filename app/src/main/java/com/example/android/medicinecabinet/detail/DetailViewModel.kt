@@ -61,4 +61,14 @@ class DetailViewModel(private val repository: MedicineRepository): ViewModel() {
         }
     }
 
+
+    private var _navigateToEdit = MutableSharedFlow<Unit>()
+    val navigateToEdit = _navigateToEdit.asSharedFlow()
+
+    fun onNavigateToEdit(){
+        viewModelScope.launch {
+            _navigateToEdit.emit(Unit)
+        }
+    }
+
 }
