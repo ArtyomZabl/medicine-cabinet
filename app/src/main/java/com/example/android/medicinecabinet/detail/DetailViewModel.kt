@@ -10,6 +10,7 @@ import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineRepository
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
@@ -71,4 +72,12 @@ class DetailViewModel(private val repository: MedicineRepository): ViewModel() {
         }
     }
 
+    private var _navigateToSchedule = MutableSharedFlow<Unit>()
+    val navigateToSchedule = _navigateToSchedule.asSharedFlow()
+
+    fun onNavigateToSchedule(){
+        viewModelScope.launch {
+            _navigateToSchedule.emit(Unit)
+        }
+    }
 }

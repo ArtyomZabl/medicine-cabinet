@@ -537,6 +537,7 @@ class AddMedicineViewModel(
 
             IntakeInterval.SPECIFIC_DAYS -> setDaysInterval(null)
             IntakeInterval.EVERY_X_DAYS -> clearSelectedDays()
+            else -> {}
         }
     }
 

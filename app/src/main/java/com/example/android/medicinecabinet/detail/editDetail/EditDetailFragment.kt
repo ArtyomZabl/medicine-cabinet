@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -128,6 +129,7 @@ class EditDetailFragment : Fragment() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
+                            .background(Color.White)
                     ) {
                         EditDetailScreen(editDetailViewModel = editDetailViewModel)
                     }
@@ -141,7 +143,7 @@ class EditDetailFragment : Fragment() {
 @Composable
 fun EditDetailScreen(editDetailViewModel: EditDetailViewModel) {
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(top = 16.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()

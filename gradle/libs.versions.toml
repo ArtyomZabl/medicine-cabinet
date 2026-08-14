@@ -1,25 +1,29 @@
 [versions]
 agp = "8.7.2"
 kotlin = "1.9.24"
-coreKtx = "1.17.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
-espressoCore = "3.7.0"
-appcompat = "1.7.1"
+espressoCore = "3.6.1"
+appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.10.1"
-constraintlayout = "2.2.1"
+activity = "1.9.3"
+constraintlayout = "2.2.0"
 legacySupportV4 = "1.0.0"
-lifecycleLivedataKtx = "2.9.3"
-lifecycleViewmodelKtx = "2.9.3"
-fragmentKtx = "1.5.6"
-navigationFragmentKtx = "2.9.4"
-navigationUiKtx = "2.9.4"
-roomCompiler = "2.8.0"
+lifecycleLivedataKtx = "2.8.7"
+lifecycleViewmodelKtx = "2.8.7"
+fragmentKtx = "1.8.5"
+navigationFragmentKtx = "2.8.5"
+navigationUiKtx = "2.8.5"
+roomCompiler = "2.6.1"
 uiDesktop = "1.7.0"
-runtimeAndroid = "1.9.4"
-roomCompilerVersion = "2.8.3"
-runtimeLivedata = "1.10.3"
+runtimeAndroid = "1.7.5"
+roomCompilerVersion = "2.6.1"
+runtimeLivedata = "1.7.5"
+runtimeSavedInstanceState = "1.0.0-alpha11"
+material3 = "1.3.1"
+ui = "1.7.5"
+material3Version = "1.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +45,10 @@ androidx-ui-desktop = { group = "androidx.compose.ui", name = "ui-desktop", vers
 androidx-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroid" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompilerVersion" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-runtime-saved-instance-state = { group = "androidx.compose.runtime", name = "runtime-saved-instance-state", version.ref = "runtimeSavedInstanceState" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3Version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

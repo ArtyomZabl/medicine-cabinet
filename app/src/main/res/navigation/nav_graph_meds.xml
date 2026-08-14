@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_detailFragment2_to_editDetailFragment"
             app:destination="@id/editDetailFragment" />
+        <action
+            android:id="@+id/action_detailFragment2_to_editScheduleFragment"
+            app:destination="@id/editScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/dosageFragment"
@@ -104,6 +107,17 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_editDetailFragment_to_detailFragment2"
+            app:destination="@id/detailFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/editScheduleFragment"
+        android:name="com.example.android.medicinecabinet.detail.editSchedule.EditScheduleFragment"
+        android:label="EditScheduleFragment" >
+        <argument
+            android:name="medicineId"
+            app:argType="integer"/>
+        <action
+            android:id="@+id/action_editScheduleFragment_to_detailFragment2"
             app:destination="@id/detailFragment2" />
     </fragment>
 </navigation>

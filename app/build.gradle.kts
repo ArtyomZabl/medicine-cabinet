@@ -58,6 +58,10 @@ dependencies {
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.runtime.saved.instance.state)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui)
+    implementation(libs.material3)
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")
     implementation("androidx.compose.material:material-icons-extended:1.6.7")
 
@@ -90,4 +94,8 @@ dependencies {
     implementation ("org.jsoup:jsoup:1.17.2")
     implementation ("io.coil-kt:coil:2.6.0")
     implementation ("io.coil-kt:coil-compose:2.6.0")
+}
+
+kotlin {
+    jvmToolchain(17)
 }

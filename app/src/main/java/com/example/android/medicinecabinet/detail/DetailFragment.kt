@@ -247,6 +247,15 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                detailViewModel.navigateToSchedule.collect {
+                    val action = DetailFragmentDirections.actionDetailFragment2ToEditScheduleFragment(medicineId)
+                    findNavController().navigate(action)
+                }
+            }
+        }
+
         binding.toolbar.inflateMenu(R.menu.detail_menu)
 
         val deleteItem = binding.toolbar.menu.findItem(R.id.action_delete)
@@ -263,6 +272,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.action_schedule -> {
+                    detailViewModel.onNavigateToSchedule()
+                    true
+                }
+
                 R.id.action_edit -> {
                     detailViewModel.onNavigateToEdit()
                     true
