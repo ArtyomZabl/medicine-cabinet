@@ -69,8 +69,12 @@ class MedicineRepository(
 
 
     // REPOSITORY SELECTED DAYS
-    val allDaysThisMeds: LiveData<List<SelectedTakingDays>> = _medicineId.switchMap { id ->
+   /* val allDaysThisMeds: LiveData<List<SelectedTakingDays>> = _medicineId.switchMap { id ->
         daoDays.getAllDaysThisMeds(id)
+    }*/
+
+    suspend fun getAllDaysThisMeds(id: Int): List<SelectedTakingDays> {
+        return daoDays.getAllDaysThisMeds(id)
     }
 
     suspend fun insertAllDays(selectedTakingDay: List<SelectedTakingDays>) {

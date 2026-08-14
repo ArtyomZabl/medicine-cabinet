@@ -16,5 +16,5 @@ interface SelectedTakingDaysDao {
     suspend fun insertAll(selectedTakingDay: List<SelectedTakingDays>)
 
     @Query("SELECT * FROM selected_taking_days WHERE medicine_id = :id")
-    fun getAllDaysThisMeds(id: Int): LiveData<List<SelectedTakingDays>>
+    suspend fun getAllDaysThisMeds(id: Int): List<SelectedTakingDays>
 }

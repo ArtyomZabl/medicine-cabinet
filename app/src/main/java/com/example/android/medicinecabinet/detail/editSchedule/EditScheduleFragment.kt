@@ -219,7 +219,7 @@ fun IntakeInterval(
 ) {
     var intakeInterval by remember { mutableStateOf(medicine.intakeInterval) }
 
-    var selectedDays = editScheduleViewModel.allDaysThisMeds.observeAsState(emptyList())
+    var selectedDays = editScheduleViewModel.selectedDays.observeAsState(emptyList())
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -241,7 +241,9 @@ fun IntakeInterval(
         }
 
         if (intakeInterval == IntakeInterval.SPECIFIC_DAYS) {
-            WeekDaySelector(selectedDays = selectedDays.value)
+            WeekDaySelector(
+                editScheduleViewModel = editScheduleViewModel,
+                selectedDays = selectedDays.value)
         }
 
     }
@@ -251,7 +253,8 @@ fun IntakeInterval(
 
 @Composable
 fun WeekDaySelector(
-    selectedDays: List<SelectedTakingDays>?
+    editScheduleViewModel: EditScheduleViewModel,
+    selectedDays: List<WeekDay>?
 ) {
     Log.d("WeekDaySelector", "WeekDaySelector called ")
     Row(
@@ -262,8 +265,8 @@ fun WeekDaySelector(
     ) {
         WeekDay.entries.forEach { day ->
             val isSelected = selectedDays?.any {
-                Log.d("WeekDaySelector", "it.weekDay: ${it.weekDay} day: $day")
-                it.weekDay == day
+                Log.d("WeekDaySelector", "it.weekDay: $it day: $day")
+                it == day
             } ?: false
 
             val dayLetter = when (day) {
@@ -285,7 +288,7 @@ fun WeekDaySelector(
                         else colorResource(R.color.light_grey)
                     )
                     .clickable {
-
+                        editScheduleViewModel.toggleDay(day)
                     },
                 contentAlignment = Alignment.Center
             ) {
