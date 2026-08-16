@@ -90,7 +90,9 @@ fun AutoCompleteTextFieldDays(
     ) {
         OutlinedTextField(
             value = selectedInterval,
-            onValueChange = {},
+            onValueChange = {
+
+            },
             readOnly = true,
             label = { Text("Интервал дней") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },

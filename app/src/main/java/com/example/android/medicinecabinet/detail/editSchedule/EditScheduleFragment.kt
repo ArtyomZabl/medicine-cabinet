@@ -218,8 +218,9 @@ fun IntakeInterval(
     medicine: Medicine
 ) {
     var intakeInterval by remember { mutableStateOf(medicine.intakeInterval) }
+    val selectedDaysString by editScheduleViewModel.daysIntervalString.observeAsState("Через день")
+    val selectedDays = editScheduleViewModel.selectedDays.observeAsState(emptyList())
 
-    var selectedDays = editScheduleViewModel.selectedDays.observeAsState(emptyList())
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -230,11 +231,10 @@ fun IntakeInterval(
             }
         )
         if (intakeInterval == IntakeInterval.EVERY_X_DAYS) {
-            var intakeIntervalDays by remember { mutableStateOf("Через день") }
             AutoCompleteTextFieldDays(
-                selectedInterval = intakeIntervalDays,
+                selectedInterval = selectedDaysString,
                 onIntervalSelected = {
-                    intakeIntervalDays = it
+                    editScheduleViewModel.setDaysInterval(it)
                 },
                 editScheduleViewModel = editScheduleViewModel
             )

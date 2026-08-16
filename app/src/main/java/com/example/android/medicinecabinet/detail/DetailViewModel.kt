@@ -34,9 +34,7 @@ class DetailViewModel(
     val selectedDays: LiveData<List<WeekDay>> get() = _selectedDays
 
     fun getSelectedDaysForMedicine(): LiveData<List<WeekDay>> {
-
         return selectedDays
-
     }
 
     init {

@@ -37,6 +37,8 @@ class EditScheduleViewModel(
         viewModelScope.launch {
             _medicine.value = repository.getOneMedicineById(medicineId)
             _allDaysThisMeds.value = repository.getAllDaysThisMeds(medicineId)
+            _daysIntervalString.value = formatInterval(medicine.value?.intakeIntervalDays)
+            _daysInterval.value = medicine.value?.intakeIntervalDays
             // _takingTimes.value = repository.getTimesThisMeds(medicineId)
 
             val initialDays = _allDaysThisMeds.value
@@ -56,15 +58,32 @@ class EditScheduleViewModel(
     }
 
 
+    // Interval days selector
+    private val _daysInterval = MutableLiveData<Int?>(medicine.value?.intakeIntervalDays)
+    val daysInterval: LiveData<Int?> get() = _daysInterval
+
+    private val _daysIntervalString = MutableLiveData<String>()
+    val daysIntervalString: LiveData<String> get() = _daysIntervalString
+
+    val intervals = (2..100).toList()
+    val displayIntervals: MutableList<String> = intervals.map { formatInterval(it) }.toMutableList()
+
     fun formatInterval(days: Int?): String {
         return when (days) {
+            null -> "Через день"
             2 -> "Через день"
             else -> "Каждые $days дней"
         }
     }
 
-    val intervals = (2..100).toList()
-    val displayIntervals: List<String> = intervals.map { formatInterval(it) }
+    fun setDaysInterval(displayString: String) {
+        _daysIntervalString.value = displayString
+
+        val days = if (displayString == "Через день") 2
+        else displayString.find { it.isDigit() }?.digitToIntOrNull()
+
+        _daysInterval.value = days
+    }
 
 
     //Week day selector
