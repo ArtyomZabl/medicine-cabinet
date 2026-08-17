@@ -1,6 +1,7 @@
 package com.example.android.medicinecabinet.detail.editSchedule
 
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -81,7 +82,11 @@ import com.example.android.medicinecabinet.detail.editSchedule.ui.AutoCompleteTe
 import com.example.android.medicinecabinet.utils.CardBackgroundLight
 import com.example.android.medicinecabinet.utils.IntakeInterval
 import com.example.android.medicinecabinet.utils.WeekDay
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 class EditScheduleFragment : Fragment() {
 
@@ -113,6 +118,45 @@ class EditScheduleFragment : Fragment() {
                 }
             }
 
+            fun showTimePicker(onTimeSelected: (time: String) -> Unit) {
+                val isSystem24Hour = is24HourFormat(context)
+                val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+
+                val picker =
+                    MaterialTimePicker.Builder()
+                        .setTitleText("SELECT YOUR TIMING")
+                        .setTimeFormat(clockFormat)
+                        .setHour(LocalDateTime.now().hour)
+                        .setMinute(LocalDateTime.now().minute)
+                        .build()
+
+                picker.addOnPositiveButtonClickListener {
+                    val pickedHour = picker.hour
+                    val pickedMinute = picker.minute
+                    val time = when {
+                        pickedHour < 10 -> {
+                            if (pickedMinute < 10) {
+                                "0$pickedHour:0$pickedMinute"
+                            } else {
+                                "0$pickedHour:$pickedMinute"
+                            }
+                        }
+
+                        else -> {
+                            if (pickedMinute < 10) {
+                                "$pickedHour:0$pickedMinute"
+                            } else {
+                                "$pickedHour:$pickedMinute"
+                            }
+                        }
+
+                    }
+                    onTimeSelected(time)
+                }
+
+                picker.show(parentFragmentManager, "tag")
+            }
+
             setContent {
                 Scaffold(
                     topBar = {
@@ -140,7 +184,14 @@ class EditScheduleFragment : Fragment() {
                             .fillMaxSize()
                             .padding(top = innerPadding.calculateTopPadding())
                     ) {
-                        EditScheduleScreen(editScheduleViewModel)
+                        EditScheduleScreen(
+                            editScheduleViewModel,
+                            showTimePicker = {
+                                showTimePicker { time ->
+                                    editScheduleViewModel.addTakingTimes(time)
+                                }
+                            }
+                        )
                     }
 
                 }
@@ -151,7 +202,10 @@ class EditScheduleFragment : Fragment() {
 }
 
 @Composable
-fun EditScheduleScreen(editScheduleViewModel: EditScheduleViewModel) {
+fun EditScheduleScreen(
+    editScheduleViewModel: EditScheduleViewModel,
+    showTimePicker: () -> Unit
+) {
     val medicine by editScheduleViewModel.medicine.observeAsState()
     val takingTimes by editScheduleViewModel.takingTimes.observeAsState(emptyList())
     val scrollState = rememberScrollState()
@@ -189,7 +243,11 @@ fun EditScheduleScreen(editScheduleViewModel: EditScheduleViewModel) {
                     .fillMaxWidth(),
                 colors = CardDefaults.cardColors(CardBackgroundLight)
             ) {
-                TimeSelectionSection(editScheduleViewModel, takingTimes)
+                TimeSelectionSection(
+                    editScheduleViewModel,
+                    takingTimes,
+                    showTimePicker = showTimePicker
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -243,7 +301,8 @@ fun IntakeInterval(
         if (intakeInterval == IntakeInterval.SPECIFIC_DAYS) {
             WeekDaySelector(
                 editScheduleViewModel = editScheduleViewModel,
-                selectedDays = selectedDays.value)
+                selectedDays = selectedDays.value
+            )
         }
 
     }
@@ -308,7 +367,8 @@ fun WeekDaySelector(
 @Composable
 fun TimeSelectionSection(
     editScheduleViewModel: EditScheduleViewModel,
-    takingTimes: List<TakingTime>
+    takingTimes: List<TakingTime>,
+    showTimePicker: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -326,14 +386,17 @@ fun TimeSelectionSection(
                 ) {
                     Text(
                         text = takingTime.time,
-                        style = TextStyle(fontSize = 16.sp)
+                        style = TextStyle(fontSize = 18.sp)
                     )
 
                     Box(
                         modifier = Modifier
                             .size(24.dp) // Размер всего круга
                             .clip(CircleShape)
-                            .background(Color.Red), // Красный фон
+                            .background(Color.Red) // Красный фон
+                            .clickable {
+                                editScheduleViewModel.deleteTakingTime(takingTime)
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -357,7 +420,7 @@ fun TimeSelectionSection(
         }
 
         Button(
-            onClick = { },
+            onClick = showTimePicker,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp)
         ) {
@@ -366,6 +429,7 @@ fun TimeSelectionSection(
 
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

@@ -2,6 +2,7 @@ package com.example.android.medicinecabinet.detail.editSchedule
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -28,9 +29,6 @@ class EditScheduleViewModel(
     private var _medicine = MutableLiveData<Medicine>()
     val medicine: LiveData<Medicine> get() = _medicine
 
-    private var _takingTimes = repository.allTimesThisMeds
-    val takingTimes: LiveData<List<TakingTime>> get() = _takingTimes
-
     init {
         repository.setMedsId(medicineId)
 
@@ -39,7 +37,9 @@ class EditScheduleViewModel(
             _allDaysThisMeds.value = repository.getAllDaysThisMeds(medicineId)
             _daysIntervalString.value = formatInterval(medicine.value?.intakeIntervalDays)
             _daysInterval.value = medicine.value?.intakeIntervalDays
-            // _takingTimes.value = repository.getTimesThisMeds(medicineId)
+            _takingTimes.addSource(repository.getTimesThisMeds(medicineId)) { times ->
+                _takingTimes.value = times
+            }
 
             val initialDays = _allDaysThisMeds.value
             _selectedDays.value = initialDays?.map { it.weekDay }?.toMutableList()
@@ -102,6 +102,22 @@ class EditScheduleViewModel(
         } else list + day
 
         _selectedDays.value = newList as MutableList<WeekDay>?
-
     }
+
+
+    // Taking times selector
+    private var _takingTimes = MediatorLiveData<List<TakingTime>>()
+    val takingTimes: LiveData<List<TakingTime>> get() = _takingTimes
+
+    fun addTakingTimes(time: String) {
+        val currentList = _takingTimes.value ?: mutableListOf()
+        val timeToAdd = TakingTime(medicineId = medicine.value!!.medicineId, time = time)
+        val newList = currentList + timeToAdd
+        _takingTimes.value = newList
+    }
+
+    fun deleteTakingTime(takingTime: TakingTime) {
+        _takingTimes.value = _takingTimes.value.orEmpty().filterNot { it.id == takingTime.id }
+    }
+
 }

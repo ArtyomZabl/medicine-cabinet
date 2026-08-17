@@ -56,9 +56,9 @@ class MedicineRepository(
         _medicineId.value = id
     }
 
-    val allTimesThisMeds: LiveData<List<TakingTime>> = _medicineId.switchMap { id ->
+    /*val allTimesThisMeds: LiveData<List<TakingTime>> = _medicineId.switchMap { id ->
         daoTime.getAllTimesThisMeds(id)
-    }
+    }*/
 
     fun getTimesThisMeds(medicineId: Int): LiveData<List<TakingTime>> = daoTime.getAllTimesThisMeds(medicineId)
 

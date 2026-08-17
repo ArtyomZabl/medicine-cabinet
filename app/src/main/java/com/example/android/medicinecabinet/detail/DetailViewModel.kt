@@ -1,6 +1,7 @@
 package com.example.android.medicinecabinet.detail
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -23,7 +24,8 @@ class DetailViewModel(
 
     val medicineId: Int = savedStateHandle["medicineId"] ?: -1
 
-    val allTimesThisMeds: LiveData<List<TakingTime>> = repository.allTimesThisMeds
+    private val _allTimesThisMeds: LiveData<List<TakingTime>> = repository.getTimesThisMeds(medicineId)
+    val allTimesThisMeds: LiveData<List<TakingTime>> get() = _allTimesThisMeds
 
     fun loadTimesAndDaysForMeds(id: Int) {
         repository.setMedsId(id)
@@ -43,6 +45,9 @@ class DetailViewModel(
         viewModelScope.launch {
             _allDaysThisMeds.value = repository.getAllDaysThisMeds(medicineId)
             _selectedDays.value = _allDaysThisMeds.value?.map { it.weekDay }?.toMutableList()
+            /*_allTimesThisMeds.addSource(repository.getTimesThisMeds(medicineId)) { times ->
+                _allTimesThisMeds.value = times
+            }*/
         }
 
     }
