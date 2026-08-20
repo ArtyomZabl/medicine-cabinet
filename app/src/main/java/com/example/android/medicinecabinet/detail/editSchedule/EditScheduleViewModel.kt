@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineRepository
@@ -14,14 +13,12 @@ import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakin
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.utils.WeekDay
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList
 
 class EditScheduleViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val repository: MedicineRepository
 ) : ViewModel() {
     val medicineId: Int = savedStateHandle["medicineId"] ?: -1
@@ -60,7 +57,7 @@ class EditScheduleViewModel(
 
     // Interval days selector
     private val _daysInterval = MutableLiveData<Int?>(medicine.value?.intakeIntervalDays)
-    val daysInterval: LiveData<Int?> get() = _daysInterval
+    // val daysInterval: LiveData<Int?> get() = _daysInterval
 
     private val _daysIntervalString = MutableLiveData<String>()
     val daysIntervalString: LiveData<String> get() = _daysIntervalString
@@ -106,7 +103,7 @@ class EditScheduleViewModel(
 
 
     // Taking times selector
-    private var _takingTimes = MediatorLiveData<List<TakingTime>>()
+    private var _takingTimes = MediatorLiveData<List<TakingTime>>(emptyList())
     val takingTimes: LiveData<List<TakingTime>> get() = _takingTimes
 
     fun addTakingTimes(time: String) {
@@ -118,6 +115,21 @@ class EditScheduleViewModel(
 
     fun deleteTakingTime(takingTime: TakingTime) {
         _takingTimes.value = _takingTimes.value.orEmpty().filterNot { it.id == takingTime.id }
+    }
+
+    fun updateTakingTime(takingTime: TakingTime, time: String) {
+        _takingTimes.value = _takingTimes.value.orEmpty().map { item ->
+            if (item == takingTime) item.copy(time = time) else item
+        }
+
+        val currentList = _takingTimes.value?.toMutableList() ?: mutableListOf()
+        val position = currentList.indexOfFirst { it.id == takingTime.id }
+        val newTakingTime = takingTime.copy(time = time)
+
+        if (position in currentList.indices) {
+            currentList[position] = newTakingTime
+            _takingTimes.value = currentList
+        }
     }
 
 }

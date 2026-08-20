@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Space
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,10 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,9 +38,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -55,13 +48,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,18 +65,18 @@ import com.example.android.medicinecabinet.R
 import com.example.android.medicinecabinet.data.Medicine
 import com.example.android.medicinecabinet.data.MedicineDatabase
 import com.example.android.medicinecabinet.data.MedicineRepository
-import com.example.android.medicinecabinet.data.selectedTakingDays.SelectedTakingDays
 import com.example.android.medicinecabinet.data.takingTime.TakingTime
 import com.example.android.medicinecabinet.detail.editSchedule.ui.AutoCompleteTextFieldDays
 import com.example.android.medicinecabinet.detail.editSchedule.ui.AutoCompleteTextFieldIntake
+import com.example.android.medicinecabinet.utils.CardBackgroundDark
 import com.example.android.medicinecabinet.utils.CardBackgroundLight
 import com.example.android.medicinecabinet.utils.IntakeInterval
 import com.example.android.medicinecabinet.utils.WeekDay
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 class EditScheduleFragment : Fragment() {
 
@@ -106,7 +96,7 @@ class EditScheduleFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
@@ -190,6 +180,14 @@ class EditScheduleFragment : Fragment() {
                                 showTimePicker { time ->
                                     editScheduleViewModel.addTakingTimes(time)
                                 }
+                            },
+                            showUpdateTimePicker = { takingTime ->
+                                showTimePicker { time ->
+                                    editScheduleViewModel.updateTakingTime(
+                                        takingTime = takingTime,
+                                        time = time
+                                    )
+                                }
                             }
                         )
                     }
@@ -204,7 +202,8 @@ class EditScheduleFragment : Fragment() {
 @Composable
 fun EditScheduleScreen(
     editScheduleViewModel: EditScheduleViewModel,
-    showTimePicker: () -> Unit
+    showTimePicker: () -> Unit,
+    showUpdateTimePicker: (TakingTime) -> Unit
 ) {
     val medicine by editScheduleViewModel.medicine.observeAsState()
     val takingTimes by editScheduleViewModel.takingTimes.observeAsState(emptyList())
@@ -246,7 +245,8 @@ fun EditScheduleScreen(
                 TimeSelectionSection(
                     editScheduleViewModel,
                     takingTimes,
-                    showTimePicker = showTimePicker
+                    showTimePicker = showTimePicker,
+                    showUpdateTimePicker = { takingTime -> showUpdateTimePicker(takingTime) }
                 )
             }
 
@@ -368,7 +368,8 @@ fun WeekDaySelector(
 fun TimeSelectionSection(
     editScheduleViewModel: EditScheduleViewModel,
     takingTimes: List<TakingTime>,
-    showTimePicker: () -> Unit
+    showTimePicker: () -> Unit,
+    showUpdateTimePicker: (TakingTime) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -376,18 +377,28 @@ fun TimeSelectionSection(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         Column() {
-            takingTimes.forEachIndexed { index, takingTime ->
+            val sortedTakingTimes = remember(takingTimes) {
+                takingTimes.sortedBy { LocalTime.parse(it.time) }
+            }
+            sortedTakingTimes.forEachIndexed { index, takingTime ->
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = takingTime.time,
-                        style = TextStyle(fontSize = 18.sp)
-                    )
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(CardBackgroundDark),
+                        onClick = { showUpdateTimePicker(takingTime) }
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 12.dp),
+                            text = takingTime.time,
+                            style = TextStyle(fontSize = 18.sp)
+                        )
+                    }
+
 
                     Box(
                         modifier = Modifier
